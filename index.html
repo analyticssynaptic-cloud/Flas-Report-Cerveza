@@ -310,14 +310,14 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
       <button class="breset" onclick="resetTab('ingreso')">Limpiar campos</button>
     </div>
 
-    <!-- EXHIBICIONES -->
+    <!-- EXHIBICIONES - Ahora abre GALERIA (sin capture) -->
     <div class="tform" id="form-exhibiciones">
       <div class="ubox" id="ub-exhibiciones"></div>
       <div class="card"><div class="clbl"><svg viewBox="0 0 24 24"><use href="#ic-store"/></svg>Producto</div><div class="sw"><select class="sel psel" id="ex-prod"><option value="">Selecciona producto</option></select></div></div>
       <div class="card"><div class="clbl"><svg viewBox="0 0 24 24"><use href="#ic-cam"/></svg>Foto</div>
         <div class="fbox" onclick="document.getElementById('f-ex').click()">
-          <input type="file" accept="image/*" capture="environment" id="f-ex" style="display:none" onchange="handlePhoto(this,'p-ex','s-ex')">
-          <div class="fic"><svg viewBox="0 0 24 24"><use href="#ic-cam"/></svg></div><div class="flbl">Tomar Foto</div>
+          <input type="file" accept="image/*" id="f-ex" style="display:none" onchange="handlePhoto(this,'p-ex','s-ex')">
+          <div class="fic"><svg viewBox="0 0 24 24"><use href="#ic-cam"/></svg></div><div class="flbl">Seleccionar Foto</div>
           <img class="fprev" id="p-ex" alt=""><div class="fstat" id="s-ex"></div>
         </div>
       </div>
@@ -326,18 +326,18 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
       <button class="breset" onclick="resetTab('exhibiciones')">Limpiar campos</button>
     </div>
 
-    <!-- GONDOLA -->
+    <!-- GONDOLA - Ahora abre GALERIA (sin capture) -->
     <div class="tform" id="form-gondola">
       <div class="ubox" id="ub-gondola"></div>
       <div class="card"><div class="sw"><select class="sel psel" id="gon-prod"><option value="">Selecciona producto</option></select></div></div>
       <div class="card"><div class="fgrid">
         <div><div class="fbox" onclick="document.getElementById('f-ga').click()">
-          <input type="file" accept="image/*" capture="environment" id="f-ga" style="display:none" onchange="handlePhoto(this,'p-ga','s-ga')">
+          <input type="file" accept="image/*" id="f-ga" style="display:none" onchange="handlePhoto(this,'p-ga','s-ga')">
           <div class="fic"><svg viewBox="0 0 24 24"><use href="#ic-cam"/></svg></div><div class="flbl">ANTES</div>
           <img class="fprev" id="p-ga" alt=""><div class="fstat" id="s-ga"></div>
         </div></div>
         <div><div class="fbox" onclick="document.getElementById('f-gd').click()">
-          <input type="file" accept="image/*" capture="environment" id="f-gd" style="display:none" onchange="handlePhoto(this,'p-gd','s-gd')">
+          <input type="file" accept="image/*" id="f-gd" style="display:none" onchange="handlePhoto(this,'p-gd','s-gd')">
           <div class="fic"><svg viewBox="0 0 24 24"><use href="#ic-cam"/></svg></div><div class="flbl">DESPUES</div>
           <img class="fprev" id="p-gd" alt=""><div class="fstat" id="s-gd"></div>
         </div></div>
@@ -400,7 +400,7 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
       <button class="breset" onclick="resetTab('ventas')">Limpiar campos</button>
     </div>
 
-    <!-- COMPETENCIA -->
+    <!-- COMPETENCIA - Ahora abre GALERIA (sin capture) -->
     <div class="tform" id="form-competencia">
       <div class="ubox" id="ub-competencia"></div>
       <div class="card ct"><div class="clbl t"><svg viewBox="0 0 24 24"><use href="#ic-users"/></svg>Competencia</div>
@@ -411,8 +411,8 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
       </div>
       <div class="card ct"><div class="clbl t"><svg viewBox="0 0 24 24"><use href="#ic-cam"/></svg>Foto Evidencia</div>
         <div class="fbox" onclick="document.getElementById('f-co').click()">
-          <input type="file" accept="image/*" capture="environment" id="f-co" style="display:none" onchange="handlePhoto(this,'p-co','s-co')">
-          <div class="fic"><svg viewBox="0 0 24 24"><use href="#ic-cam"/></svg></div><div class="flbl">Tomar Foto</div>
+          <input type="file" accept="image/*" id="f-co" style="display:none" onchange="handlePhoto(this,'p-co','s-co')">
+          <div class="fic"><svg viewBox="0 0 24 24"><use href="#ic-cam"/></svg></div><div class="flbl">Seleccionar Foto</div>
           <img class="fprev" id="p-co" alt=""><div class="fstat" id="s-co"></div>
         </div>
       </div>
@@ -508,7 +508,7 @@ function bootApp(){
   buildProds();show('app');tab('ingreso');
 }
 
-// DROPDOWNS — primera palabra por categoria
+// DROPDOWNS — primera palabra por categoria (SOLO PRIMERA PALABRA VISIBLE)
 function fw(s){return s.trim().split(/\s+/)[0];}
 function buildProds(){
   const g={};
@@ -523,8 +523,8 @@ function buildProds(){
       const og=document.createElement('optgroup');og.label='— '+marca+' —';
       g[marca].sort().forEach(n=>{
         const o=document.createElement('option');
-        o.value=n;
-        o.textContent=fw(n); // Solo primera palabra en la lista
+        o.value=n; // Guardamos el nombre completo en el value
+        o.textContent=fw(n); // Mostramos SOLO la primera palabra
         og.appendChild(o);
       });
       sel.appendChild(og);
