@@ -262,7 +262,7 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
 </head>
 <body>
 
-<!-- SVG SPRITE COMPLETO -->
+<!-- SVG SPRITE -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
   <symbol id="ic-beer" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h11l1 3H4L5 3z"/><path d="M4 6v13a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V6"/><path d="M17 9h2a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2"/></symbol>
   <symbol id="ic-camera" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></symbol>
@@ -354,132 +354,82 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
   </div></div>
 
   <div class="main-scroll"><div class="main">
+
   <!-- INGRESO - Selfie frontal -->
   <div class="tab-form active" id="form-ingreso">
     <div class="user-box" id="ub-ingreso"></div>
     <div class="card">
       <div class="card-lbl"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-selfie"/></svg></span>Selfie de Ingreso</div>
-      <p style="font-size:.62rem;color:var(--gray);margin-bottom:10px;font-weight:500;">📸 Se abrirá la <strong>cámara frontal</strong> automáticamente para tu selfie de ingreso al PDV</p>
+      <p style="font-size:.62rem;color:var(--gray);margin-bottom:10px;">📸 Cámara frontal - selfie obligatoria</p>
       <div class="foto-box" onclick="document.getElementById('foto-ingreso').click()">
         <input type="file" accept="image/*" capture="user" id="foto-ingreso" style="display:none" onchange="handlePhoto(this,'prev-ingreso','stat-ingreso')">
         <div class="foto-icon-lg"><svg viewBox="0 0 24 24"><use href="#ic-selfie"/></svg></div>
-        <div class="foto-lbl-txt">📷 Tomar Selfie de Ingreso</div>
-        <div class="foto-sub-txt">Toca aquí → se abre cámara frontal</div>
-        <img class="foto-preview" id="prev-ingreso" alt="Preview selfie">
+        <div class="foto-lbl-txt">📷 Tomar Selfie</div>
+        <div class="foto-sub-txt">Toca → cámara frontal</div>
+        <img class="foto-preview" id="prev-ingreso">
         <div class="foto-status" id="stat-ingreso"></div>
       </div>
     </div>
     <div class="card">
-      <div class="card-lbl"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-clipboard"/></svg></span>Observaciones de Ingreso</div>
-      <div class="f"><label class="fl">Novedades al inicio del turno</label><textarea class="ta" id="i-obs" placeholder="Estado del punto, novedades, condiciones iniciales del PDV..."></textarea></div>
+      <div class="card-lbl"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-clipboard"/></svg></span>Observaciones</div>
+      <textarea class="ta" id="i-obs" placeholder="Novedades al inicio del turno..."></textarea>
       <div id="loc-ingreso"></div>
     </div>
-    <button class="btn-send" id="btn-ingreso" onclick="submitIngreso(event)"><svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Enviar Reporte de Ingreso</button>
+    <div class="btn-wa-ingreso-wrap" style="margin-bottom:8px;">
+      <button class="btn-global-wa" onclick="copyIngresoWhatsApp()" style="background:linear-gradient(135deg,#25D366,#128C7E); margin-bottom:0;"><svg viewBox="0 0 24 24"><use href="#ic-wa"/></svg> 📱 WhatsApp - Enviar Ingreso</button>
+    </div>
+    <button class="btn-send" id="btn-ingreso" onclick="submitIngreso(event)"><svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Enviar Ingreso</button>
     <button class="btn-reset" onclick="resetTab('ingreso')">Limpiar campos</button>
   </div>
 
   <!-- EXHIBICIONES -->
   <div class="tab-form" id="form-exhibiciones">
     <div class="user-box" id="ub-exhibiciones"></div>
-    <div class="card">
-      <div class="card-lbl"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-store"/></svg></span>Producto Exhibido</div>
-      <div class="f"><label class="fl">Producto</label><div class="sel-w"><select class="sel prod-sel" id="ex-producto"><option value="">Selecciona producto</option></select></div></div>
-    </div>
-    <div class="card">
-      <div class="card-lbl"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-image"/></svg></span>Foto de Exhibición</div>
-      <div class="foto-box"><input type="file" accept="image/*" id="foto-exhibiciones" onchange="handlePhoto(this,'prev-exhibiciones','stat-exhibiciones')"><div class="foto-icon-lg"><svg viewBox="0 0 24 24"><use href="#ic-camera"/></svg></div><div class="foto-lbl-txt">📷 Abrir Cámara / Galería</div><div class="foto-sub-txt">Toca para elegir</div><img class="foto-preview" id="prev-exhibiciones" alt="Preview"><div class="foto-status" id="stat-exhibiciones"></div></div>
-    </div>
-    <div class="card">
-      <div class="card-lbl"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-clipboard"/></svg></span>Observaciones</div>
-      <textarea class="ta" id="ex-obs" placeholder="Describe la exhibición, ubicación dentro del PDV, material utilizado..."></textarea>
-      <div id="loc-exhibiciones"></div>
-    </div>
+    <div class="card"><div class="card-lbl"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-store"/></svg></span>Producto Exhibido</div><div class="sel-w"><select class="sel prod-sel" id="ex-producto"><option value="">Selecciona producto</option></select></div></div>
+    <div class="card"><div class="card-lbl"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-image"/></svg></span>Foto</div><div class="foto-box"><input type="file" accept="image/*" id="foto-exhibiciones" onchange="handlePhoto(this,'prev-exhibiciones','stat-exhibiciones')"><div class="foto-icon-lg"><svg viewBox="0 0 24 24"><use href="#ic-camera"/></svg></div><div class="foto-lbl-txt">📷 Tomar Foto</div><img class="foto-preview" id="prev-exhibiciones"><div class="foto-status" id="stat-exhibiciones"></div></div></div>
+    <div class="card"><textarea class="ta" id="ex-obs" placeholder="Observaciones..."></textarea><div id="loc-exhibiciones"></div></div>
     <button class="btn-send" id="btn-exhibiciones" onclick="submitExhibiciones(event)"><svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Enviar Exhibición</button>
     <button class="btn-reset" onclick="resetTab('exhibiciones')">Limpiar campos</button>
   </div>
 
-  <!-- EJECUCIÓN GÓNDOLA -->
+  <!-- GONDOLA -->
   <div class="tab-form" id="form-gondola">
     <div class="user-box" id="ub-gondola"></div>
-    <div class="card">
-      <div class="card-lbl"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-store"/></svg></span>Ejecución en Góndola</div>
-      <div class="f"><label class="fl">Producto</label><div class="sel-w"><select class="sel prod-sel" id="gon-producto"><option value="">Selecciona producto</option></select></div></div>
-    </div>
-    <div class="card">
-      <div class="card-lbl"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-camera"/></svg></span>Foto Antes y Después</div>
-      <div class="foto-grid">
-        <div><p style="font-size:.6rem;font-weight:700;color:var(--gray);text-align:center;margin-bottom:6px;">ANTES</p><div class="foto-box" style="padding:.75rem;"><input type="file" accept="image/*" id="foto-gon-antes" onchange="handlePhoto(this,'prev-gon-antes','stat-gon-antes')"><div class="foto-icon-lg" style="width:28px;height:28px;"><svg viewBox="0 0 24 24"><use href="#ic-camera"/></svg></div><div class="foto-lbl-txt" style="font-size:.62rem;">Foto Antes</div><img class="foto-preview" id="prev-gon-antes"><div class="foto-status" id="stat-gon-antes"></div></div></div>
-        <div><p style="font-size:.6rem;font-weight:700;color:var(--gray);text-align:center;margin-bottom:6px;">DESPUÉS</p><div class="foto-box" style="padding:.75rem;"><input type="file" accept="image/*" id="foto-gon-despues" onchange="handlePhoto(this,'prev-gon-despues','stat-gon-despues')"><div class="foto-icon-lg" style="width:28px;height:28px;"><svg viewBox="0 0 24 24"><use href="#ic-camera"/></svg></div><div class="foto-lbl-txt" style="font-size:.62rem;">Foto Después</div><img class="foto-preview" id="prev-gon-despues"><div class="foto-status" id="stat-gon-despues"></div></div></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-lbl"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-info"/></svg></span>Participación de Lineales</div>
-      <div class="info-bar"><svg viewBox="0 0 24 24"><use href="#ic-info"/></svg>Registra el número de caras (facings) visibles en la góndola</div>
-      <div class="f"><label class="fl">Caras Propias (Central Cervecera)</label><div class="num-row"><button type="button" class="nb m" onclick="adjNum('gon-caras-p',-1)"><svg viewBox="0 0 24 24"><use href="#ic-minus"/></svg></button><input class="ni" id="gon-caras-p" type="number" inputmode="numeric" min="0" value="0"><button type="button" class="nb p" onclick="adjNum('gon-caras-p',1)"><svg viewBox="0 0 24 24"><use href="#ic-plus"/></svg></button></div></div>
-      <div class="f"><label class="fl">Caras Competencia</label><div class="num-row"><button type="button" class="nb m" onclick="adjNum('gon-caras-c',-1)"><svg viewBox="0 0 24 24"><use href="#ic-minus"/></svg></button><input class="ni" id="gon-caras-c" type="number" inputmode="numeric" min="0" value="0"><button type="button" class="nb p" onclick="adjNum('gon-caras-c',1)"><svg viewBox="0 0 24 24"><use href="#ic-plus"/></svg></button></div></div>
-      <div class="f"><label class="fl">Observaciones</label><textarea class="ta" id="gon-obs" placeholder="Estado de la góndola, espacio ganado, posición frente a competencia..."></textarea></div>
-      <div id="loc-gondola"></div>
-    </div>
-    <button class="btn-send" id="btn-gondola" onclick="submitGondola(event)"><svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Enviar Ejecución Góndola</button>
+    <div class="card"><div class="sel-w"><select class="sel prod-sel" id="gon-producto"><option value="">Selecciona producto</option></select></div></div>
+    <div class="card"><div class="foto-grid"><div><div class="foto-box"><input type="file" accept="image/*" id="foto-gon-antes" onchange="handlePhoto(this,'prev-gon-antes','stat-gon-antes')"><div class="foto-icon-lg"><svg viewBox="0 0 24 24"><use href="#ic-camera"/></svg></div><div class="foto-lbl-txt">ANTES</div><img class="foto-preview" id="prev-gon-antes"><div class="foto-status" id="stat-gon-antes"></div></div></div><div><div class="foto-box"><input type="file" accept="image/*" id="foto-gon-despues" onchange="handlePhoto(this,'prev-gon-despues','stat-gon-despues')"><div class="foto-icon-lg"><svg viewBox="0 0 24 24"><use href="#ic-camera"/></svg></div><div class="foto-lbl-txt">DESPUÉS</div><img class="foto-preview" id="prev-gon-despues"><div class="foto-status" id="stat-gon-despues"></div></div></div></div></div>
+    <div class="card"><div class="f"><label class="fl">Caras Propias</label><div class="num-row"><button class="nb m" onclick="adjNum('gon-caras-p',-1)"><svg viewBox="0 0 24 24"><use href="#ic-minus"/></svg></button><input class="ni" id="gon-caras-p" type="number" value="0"><button class="nb p" onclick="adjNum('gon-caras-p',1)"><svg viewBox="0 0 24 24"><use href="#ic-plus"/></svg></button></div></div><div class="f"><label class="fl">Caras Competencia</label><div class="num-row"><button class="nb m" onclick="adjNum('gon-caras-c',-1)"><svg viewBox="0 0 24 24"><use href="#ic-minus"/></svg></button><input class="ni" id="gon-caras-c" type="number" value="0"><button class="nb p" onclick="adjNum('gon-caras-c',1)"><svg viewBox="0 0 24 24"><use href="#ic-plus"/></svg></button></div></div><textarea class="ta" id="gon-obs" placeholder="Observaciones..."></textarea><div id="loc-gondola"></div></div>
+    <button class="btn-send" id="btn-gondola" onclick="submitGondola(event)"><svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Enviar Góndola</button>
     <button class="btn-reset" onclick="resetTab('gondola')">Limpiar campos</button>
   </div>
 
-  <!-- PRÓXIMOS A VENCER -->
+  <!-- PROX VENCER -->
   <div class="tab-form" id="form-proxvencer">
     <div class="user-box" id="ub-proxvencer"></div>
-    <div class="card card-orange">
-      <div class="card-lbl orange"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-clock"/></svg></span>Producto Próximo a Vencer</div>
-      <div class="f"><label class="fl">Producto</label><div class="sel-w"><select class="sel prod-sel" id="pv-producto"><option value="">Selecciona producto</option></select></div></div>
-      <div class="f"><label class="fl">Fecha de Vencimiento</label><input class="inp" type="date" id="pv-fecha"></div>
-      <div class="f"><label class="fl">Cantidad de Unidades</label><div class="num-row"><button type="button" class="nb m" onclick="adjNum('pv-cant',-1)"><svg viewBox="0 0 24 24"><use href="#ic-minus"/></svg></button><input class="ni" id="pv-cant" type="number" inputmode="numeric" min="0" value="0"><button type="button" class="nb p" onclick="adjNum('pv-cant',1)"><svg viewBox="0 0 24 24"><use href="#ic-plus"/></svg></button></div></div>
-      <div class="f"><label class="fl">Observaciones</label><textarea class="ta" id="pv-obs" placeholder="Detalle del hallazgo, ubicación exacta en el PDV, acciones tomadas..."></textarea></div>
-      <div id="loc-proxvencer"></div>
-    </div>
-    <button class="btn-send orange" id="btn-proxvencer" onclick="submitProxVencer(event)"><svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Reportar Próximo a Vencer</button>
+    <div class="card card-orange"><div class="card-lbl orange"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-clock"/></svg></span>Próximo a Vencer</div><div class="sel-w"><select class="sel prod-sel" id="pv-producto"><option value="">Producto</option></select></div><div class="f"><input class="inp" type="date" id="pv-fecha"></div><div class="f"><div class="num-row"><button class="nb m" onclick="adjNum('pv-cant',-1)"><svg viewBox="0 0 24 24"><use href="#ic-minus"/></svg></button><input class="ni" id="pv-cant" type="number" value="0"><button class="nb p" onclick="adjNum('pv-cant',1)"><svg viewBox="0 0 24 24"><use href="#ic-plus"/></svg></button></div></div><textarea class="ta" id="pv-obs" placeholder="Observaciones..."></textarea><div id="loc-proxvencer"></div></div>
+    <button class="btn-send orange" id="btn-proxvencer" onclick="submitProxVencer(event)"><svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Reportar</button>
     <button class="btn-reset" onclick="resetTab('proxvencer')">Limpiar campos</button>
   </div>
 
-  <!-- DESCUENTOS - Envío individual -->
+  <!-- DESCUENTOS -->
   <div class="tab-form" id="form-descuentos">
     <div class="user-box" id="ub-descuentos"></div>
-    <div class="card card-blue">
-      <div class="card-lbl blue"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-tag"/></svg></span>Descuento Detectado</div>
-      <div class="info-bar"><svg viewBox="0 0 24 24"><use href="#ic-info"/></svg>Registra un producto con descuento</div>
-      <div class="f"><label class="fl">Producto</label><div class="sel-w"><select class="sel prod-sel" id="dc-producto"><option value="">Selecciona producto</option></select></div></div>
-      <div class="inp-row"><div class="f"><label class="fl">Precio Regular ($)</label><input class="inp" type="number" inputmode="decimal" id="dc-precio-reg" placeholder="0" min="0" oninput="calcDescuento()"></div><div class="f"><label class="fl">Precio c/ Desc. ($)</label><input class="inp" type="number" inputmode="decimal" id="dc-precio-desc" placeholder="0" min="0" oninput="calcDescuento()"></div></div>
-      <div class="f"><label class="fl">Descuento (%) auto-calculado</label><input class="inp" type="number" inputmode="decimal" id="dc-pct" placeholder="Se calcula solo" min="0" max="100" readonly style="background:var(--gp);color:var(--g2);"></div>
-      <div class="f"><label class="fl">Observaciones</label><textarea class="ta" id="dc-obs" placeholder="Tipo de descuento, mecánica, vigencia..."></textarea></div>
-      <div id="loc-descuentos"></div>
-    </div>
+    <div class="card card-blue"><div class="card-lbl blue"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-tag"/></svg></span>Descuento</div><div class="sel-w"><select class="sel prod-sel" id="dc-producto"><option value="">Producto</option></select></div><div class="inp-row"><div class="f"><input class="inp" type="number" id="dc-precio-reg" placeholder="Precio regular" oninput="calcDescuento()"></div><div class="f"><input class="inp" type="number" id="dc-precio-desc" placeholder="Precio descuento" oninput="calcDescuento()"></div></div><input class="inp" type="text" id="dc-pct" placeholder="% descuento" readonly style="background:var(--gp);"><textarea class="ta" id="dc-obs" placeholder="Observaciones..."></textarea><div id="loc-descuentos"></div></div>
     <button class="btn-send blue" id="btn-descuentos" onclick="submitDescuentos(event)"><svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Reportar Descuento</button>
     <button class="btn-reset" onclick="resetTab('descuentos')">Limpiar campos</button>
   </div>
 
-  <!-- AGOTADOS - Envío individual -->
+  <!-- AGOTADOS -->
   <div class="tab-form" id="form-agotados">
     <div class="user-box" id="ub-agotados"></div>
-    <div class="card card-red">
-      <div class="card-lbl red"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-x-circle"/></svg></span>Producto Agotado</div>
-      <div class="info-bar"><svg viewBox="0 0 24 24"><use href="#ic-info"/></svg>Registra un producto agotado</div>
-      <div class="f"><label class="fl">Producto Agotado</label><div class="sel-w"><select class="sel prod-sel" id="ag-producto"><option value="">Selecciona producto</option></select></div></div>
-      <div class="f"><label class="fl">Observaciones / Causa</label><textarea class="ta" id="ag-obs" placeholder="Motivo del agotamiento, tiempo estimado sin stock..."></textarea></div>
-      <div id="loc-agotados"></div>
-    </div>
+    <div class="card card-red"><div class="card-lbl red"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-x-circle"/></svg></span>Producto Agotado</div><div class="sel-w"><select class="sel prod-sel" id="ag-producto"><option value="">Producto</option></select></div><textarea class="ta" id="ag-obs" placeholder="Causa / Observaciones..."></textarea><div id="loc-agotados"></div></div>
     <button class="btn-send red" id="btn-agotados" onclick="submitAgotados(event)"><svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Reportar Agotado</button>
     <button class="btn-reset" onclick="resetTab('agotados')">Limpiar campos</button>
   </div>
 
-  <!-- VENTAS - Envío individual -->
+  <!-- VENTAS -->
   <div class="tab-form" id="form-ventas">
     <div class="user-box" id="ub-ventas"></div>
-    <div class="card card-purple">
-      <div class="card-lbl purple"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-dollar"/></svg></span>Registro de Venta</div>
-      <div class="info-bar"><svg viewBox="0 0 24 24"><use href="#ic-info"/></svg>Registra un producto vendido</div>
-      <div class="f"><label class="fl">Producto</label><div class="sel-w"><select class="sel prod-sel" id="vt-producto"><option value="">Selecciona producto</option></select></div></div>
-      <div class="f"><label class="fl">Cantidad Vendida</label><div class="num-row"><button type="button" class="nb m" onclick="adjNum('vt-cant',-1)"><svg viewBox="0 0 24 24"><use href="#ic-minus"/></svg></button><input class="ni" id="vt-cant" type="number" inputmode="numeric" min="1" value="1"><button type="button" class="nb p" onclick="adjNum('vt-cant',1)"><svg viewBox="0 0 24 24"><use href="#ic-plus"/></svg></button></div></div>
-      <div class="f"><label class="fl">Observaciones</label><textarea class="ta" id="vt-obs" placeholder="Canal de venta, cliente tipo, motivador de compra..."></textarea></div>
-      <div id="loc-ventas"></div>
-    </div>
+    <div class="card card-purple"><div class="card-lbl purple"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-dollar"/></svg></span>Venta</div><div class="sel-w"><select class="sel prod-sel" id="vt-producto"><option value="">Producto</option></select></div><div class="num-row"><button class="nb m" onclick="adjNum('vt-cant',-1)"><svg viewBox="0 0 24 24"><use href="#ic-minus"/></svg></button><input class="ni" id="vt-cant" type="number" value="1"><button class="nb p" onclick="adjNum('vt-cant',1)"><svg viewBox="0 0 24 24"><use href="#ic-plus"/></svg></button></div><textarea class="ta" id="vt-obs" placeholder="Observaciones..."></textarea><div id="loc-ventas"></div></div>
     <button class="btn-send purple" id="btn-ventas" onclick="submitVentas(event)"><svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Registrar Venta</button>
     <button class="btn-reset" onclick="resetTab('ventas')">Limpiar campos</button>
   </div>
@@ -487,19 +437,8 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
   <!-- COMPETENCIA -->
   <div class="tab-form" id="form-competencia">
     <div class="user-box" id="ub-competencia"></div>
-    <div class="card card-teal">
-      <div class="card-lbl teal"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-users"/></svg></span>Reporte de Competencia</div>
-      <div class="info-bar"><svg viewBox="0 0 24 24"><use href="#ic-info"/></svg>Escribe la marca y agrega sus productos observados</div>
-      <div class="f"><label class="fl">Marca Competencia</label><input class="inp" id="comp-marca" type="text" placeholder="Ej: Bavaria, Heineken, Águila..."></div>
-      <div class="f"><label class="fl">Producto de la Competencia</label><div style="display:flex;gap:8px;"><input class="inp" id="comp-prod-input" type="text" placeholder="Ej: Águila 330ml lata" style="flex:1;"><button type="button" class="btn-lookup" onclick="addCompetenciaProducto()">+ Agregar</button></div><div class="comp-tag-list" id="comp-prods-tags"></div></div>
-      <div class="f"><label class="fl">Acción / Hallazgo</label><div class="sel-w"><select class="sel" id="comp-accion"><option value="Promoción activa">🏷️ Promoción activa</option><option value="Descuento en precio">💲 Descuento en precio</option><option value="Espacio ganado en góndola">📦 Espacio ganado en góndola</option><option value="Exhibición adicional">🖼️ Exhibición adicional</option><option value="Material POP">🎯 Material POP</option><option value="Agotado">❌ Agotado</option><option value="Nuevo producto">🆕 Nuevo producto</option><option value="Otro hallazgo">📝 Otro hallazgo</option></select></div></div>
-      <div class="f"><label class="fl">Observaciones Generales</label><textarea class="ta" id="comp-obs" placeholder="Contexto general, actividades de mercadeo de la competencia observadas..."></textarea></div>
-      <div id="loc-competencia"></div>
-    </div>
-    <div class="card card-teal">
-      <div class="card-lbl teal"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-camera"/></svg></span>Foto de Evidencia</div>
-      <div class="foto-box"><input type="file" accept="image/*" id="foto-competencia" onchange="handlePhoto(this,'prev-competencia','stat-competencia')"><div class="foto-icon-lg"><svg viewBox="0 0 24 24"><use href="#ic-camera"/></svg></div><div class="foto-lbl-txt">📷 Foto de la actividad</div><div class="foto-sub-txt">Toca para elegir desde galería o cámara</div><img class="foto-preview" id="prev-competencia" alt="Preview"><div class="foto-status" id="stat-competencia"></div></div>
-    </div>
+    <div class="card card-teal"><div class="card-lbl teal"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-users"/></svg></span>Competencia</div><div class="f"><input class="inp" id="comp-marca" placeholder="Marca competencia"></div><div class="f"><div style="display:flex;gap:8px;"><input class="inp" id="comp-prod-input" placeholder="Producto"><button class="btn-lookup" onclick="addCompetenciaProducto()">+ Agregar</button></div><div class="comp-tag-list" id="comp-prods-tags"></div></div><div class="f"><div class="sel-w"><select class="sel" id="comp-accion"><option>Promoción activa</option><option>Descuento en precio</option><option>Espacio ganado</option><option>Exhibición adicional</option><option>Material POP</option><option>Agotado</option><option>Nuevo producto</option></select></div></div><textarea class="ta" id="comp-obs" placeholder="Observaciones..."></textarea><div id="loc-competencia"></div></div>
+    <div class="card card-teal"><div class="card-lbl teal"><span class="ci"><svg viewBox="0 0 24 24"><use href="#ic-camera"/></svg></span>Foto Evidencia</div><div class="foto-box"><input type="file" accept="image/*" id="foto-competencia" onchange="handlePhoto(this,'prev-competencia','stat-competencia')"><div class="foto-icon-lg"><svg viewBox="0 0 24 24"><use href="#ic-camera"/></svg></div><div class="foto-lbl-txt">📷 Tomar Foto</div><img class="foto-preview" id="prev-competencia"><div class="foto-status" id="stat-competencia"></div></div></div>
     <button class="btn-send teal" id="btn-competencia" onclick="submitCompetencia(event)"><svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Reportar Competencia</button>
     <button class="btn-reset" onclick="resetTab('competencia')">Limpiar campos</button>
   </div>
@@ -511,27 +450,17 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
 <div id="modal-confirm"><div class="confirm-box"><div class="check-icon"><svg viewBox="0 0 24 24"><use href="#ic-check"/></svg></div><h4>✅ Reporte Enviado</h4><p>Información guardada correctamente</p><button onclick="closeConfirmModal()">Continuar</button></div></div>
 
 <div id="toast"></div>
+
 <script>
-// ═══════════════════════════════════════════════════
-// CONFIGURACIÓN - ACTUALIZAR CON TU URL DE WEB APP
-// ═══════════════════════════════════════════════════
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbybViBWnw0w87mUvd5hPvEUQg5lDXDz-3tHESWBbAEfsJ5-BvLwDWofjEhb0FFixDAbzQ/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzOCzxxOR9ALUX_lXWMlMKn4JFH-k5vAD4u65lMlX6Io74yDdeCUk1y1jZFGLMcS7LeIw/exec';
 const CONFIG_SS_ID = '185O1g8wAYZoQn3fiPkOOnVhauaDiTR_hC12f_34oxh4';
 
-// ─── ESTADO GLOBAL ─────────────────────────────────
 let currentUser = null, globalCiudad = '', globalPDV = '', userLoc = null, locWatching = false;
 let allUsers = {}, pdvData = {}, productos = [], photoData = {};
 let compProdsTemp = [];
-let journeyLog = [];
+let journeyLog = []; // Guarda { hoja, data, time, fotoUrl }
 
-// ─── ARRANQUE ──────────────────────────────────────
-document.addEventListener('DOMContentLoaded', async () => {
-  showScreen('load');
-  reqLoc();
-  await loadAllConfig();
-  showScreen('login');
-  fillLoginCiudad();
-});
+document.addEventListener('DOMContentLoaded', async () => { showScreen('load'); reqLoc(); await loadAllConfig(); showScreen('login'); fillLoginCiudad(); });
 
 function showScreen(id) {
   document.getElementById('screen-load').style.display = id === 'load' ? 'flex' : 'none';
@@ -539,18 +468,12 @@ function showScreen(id) {
   document.getElementById('screen-app').className = id === 'app' ? 'active' : '';
 }
 
-function logout() {
-  if (!confirm('¿Cambiar de PDV o salir?')) return;
-  currentUser = null; globalCiudad = ''; globalPDV = ''; journeyLog = []; compProdsTemp = [];
-  showScreen('login');
-}
+function logout() { if (!confirm('¿Cambiar de PDV?')) return; currentUser = null; globalCiudad = ''; globalPDV = ''; journeyLog = []; compProdsTemp = []; showScreen('login'); }
 
-// ─── CARGA CONFIGURACIÓN ───────────────────────────
 async function loadAllConfig() { await Promise.allSettled([loadUsers(), loadPDV(), loadProductos()]); }
 
 async function gvizFetch(sheet) {
-  const url = `https://docs.google.com/spreadsheets/d/${CONFIG_SS_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheet)}`;
-  const r = await fetch(url);
+  const r = await fetch(`https://docs.google.com/spreadsheets/d/${CONFIG_SS_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheet)}`);
   const txt = await r.text();
   return JSON.parse(txt.substring(47).slice(0, -2));
 }
@@ -562,7 +485,7 @@ async function loadUsers() {
       const ced = row.c[0]?.v?.toString().trim();
       if (ced) allUsers[ced] = { cedula: ced, celular: (row.c[1]?.v ?? '').toString().trim(), nombre: (row.c[2]?.v ?? '').toString().trim() };
     });
-  } catch(e) { console.warn(e); }
+  } catch(e) {}
 }
 
 async function loadPDV() {
@@ -572,7 +495,7 @@ async function loadPDV() {
       const c = row.c[0]?.v?.toString().trim(), p = row.c[1]?.v?.toString().trim();
       if (c && p) { if (!pdvData[c]) pdvData[c] = []; if (!pdvData[c].includes(p)) pdvData[c].push(p); }
     });
-  } catch(e) { console.warn(e); }
+  } catch(e) {}
 }
 
 async function loadProductos() {
@@ -588,10 +511,9 @@ async function loadProductos() {
     } else {
       rows.forEach(row => { const p = (row.c[0]?.v ?? '').toString().trim(); if (p) productos.push(p); });
     }
-  } catch(e) { console.warn(e); }
+  } catch(e) {}
 }
 
-// ─── LOGIN ─────────────────────────────────────────
 function loginByCedula() {
   const ced = document.getElementById('l-cedula').value.trim();
   const user = allUsers[ced];
@@ -599,7 +521,7 @@ function loginByCedula() {
   currentUser = user;
   document.getElementById('l-nombre').value = user.nombre;
   document.getElementById('l-celular').value = user.celular;
-  showToast(`Bienvenido/a, ${user.nombre.split(' ')[0]} 👋`, 'ok');
+  showToast(`Bienvenido ${user.nombre.split(' ')[0]}`, 'ok');
 }
 
 function fillLoginCiudad() {
@@ -616,19 +538,14 @@ function fillLoginPDV() {
 }
 
 function startApp() {
-  if (!currentUser) { showToast('Ingresa tu cédula primero', 'error'); return; }
-  const ciudad = document.getElementById('l-ciudad').value;
-  const pdv = document.getElementById('l-pdv').value;
-  if (!ciudad) { showToast('Selecciona una ciudad', 'error'); return; }
-  if (!pdv) { showToast('Selecciona un punto de venta', 'error'); return; }
-
+  if (!currentUser) { showToast('Ingresa tu cédula', 'error'); return; }
+  const ciudad = document.getElementById('l-ciudad').value, pdv = document.getElementById('l-pdv').value;
+  if (!ciudad || !pdv) { showToast('Selecciona ciudad y PDV', 'error'); return; }
   globalCiudad = ciudad; globalPDV = pdv;
-  document.getElementById('hdr-nombre').textContent = currentUser.nombre.split(' ').slice(0,2).join(' ');
+  document.getElementById('hdr-nombre').textContent = currentUser.nombre.split(' ')[0];
   document.getElementById('hdr-pdv').textContent = `${ciudad} · ${pdv}`;
-
-  const ub = `<div class="user-avatar">${currentUser.nombre.charAt(0)}</div><div class="user-info"><div class="user-name">${currentUser.nombre}</div><div class="user-sub">Céd. ${currentUser.cedula} · ${currentUser.celular}</div></div><div class="user-pdv-badge">${ciudad}</div>`;
+  const ub = `<div class="user-avatar">${currentUser.nombre.charAt(0)}</div><div class="user-info"><div class="user-name">${currentUser.nombre}</div><div class="user-sub">Céd. ${currentUser.cedula}</div></div><div class="user-pdv-badge">${ciudad}</div>`;
   document.querySelectorAll('[id^="ub-"]').forEach(el => el.innerHTML = ub);
-
   fillAllProductDropdowns();
   showScreen('app');
   switchTab('ingreso');
@@ -641,86 +558,70 @@ function fillAllProductDropdowns() {
     if (!grouped[obj.marca]) grouped[obj.marca] = [];
     grouped[obj.marca].push(obj.nombre);
   });
-  const sortedBrands = Object.keys(grouped).sort();
   document.querySelectorAll('.prod-sel').forEach(sel => {
     sel.innerHTML = '<option value="">Selecciona producto</option>';
-    sortedBrands.forEach(marca => {
+    Object.keys(grouped).sort().forEach(marca => {
       const group = document.createElement('optgroup');
       group.label = marca;
-      grouped[marca].sort().forEach(nombre => {
-        const opt = document.createElement('option');
-        opt.value = nombre;
-        opt.textContent = nombre;
-        group.appendChild(opt);
-      });
+      grouped[marca].sort().forEach(nombre => { const opt = document.createElement('option'); opt.value = nombre; opt.textContent = nombre; group.appendChild(opt); });
       sel.appendChild(group);
     });
   });
 }
 
-// ─── UBICACIÓN ─────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.tab-form').forEach(f => f.classList.toggle('active', f.id === 'form-' + tab));
+  reqLoc();
+}
+
 function reqLoc() {
-  if (locWatching || !navigator.geolocation) { if (!navigator.geolocation) setLocUI(false); return; }
+  if (locWatching || !navigator.geolocation) return;
   locWatching = true;
   navigator.geolocation.watchPosition(pos => { userLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude }; setLocUI(true); }, () => setLocUI(false), { enableHighAccuracy: true });
 }
 
 function setLocUI(ok) {
   const locIds = ['loc-ingreso','loc-exhibiciones','loc-gondola','loc-proxvencer','loc-descuentos','loc-agotados','loc-ventas','loc-competencia'];
-  const msg = ok ? `<div class="loc-chip ok"><svg viewBox="0 0 24 24"><use href="#ic-map-pin"/></svg>GPS activo: ${userLoc?.lat?.toFixed(5)}, ${userLoc?.lng?.toFixed(5)}</div>` : `<div class="loc-chip err"><svg viewBox="0 0 24 24"><use href="#ic-map-pin"/></svg>GPS no disponible</div>`;
-  locIds.forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = msg; });
+  const msg = ok ? `<div class="loc-chip ok"><svg viewBox="0 0 24 24"><use href="#ic-map-pin"/></svg>GPS activo</div>` : `<div class="loc-chip err"><svg viewBox="0 0 24 24"><use href="#ic-map-pin"/></svg>GPS no disponible</div>`;
+  locIds.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = msg; });
 }
 
-function getGmapsLink() { if (!userLoc) return ''; return `https://www.google.com/maps?q=${userLoc.lat.toFixed(6)},${userLoc.lng.toFixed(6)}`; }
-
-// ─── TABS ──────────────────────────────────────────
-function switchTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-  document.querySelectorAll('.tab-form').forEach(f => f.classList.toggle('active', f.id === 'form-' + tab));
-  const btn = document.querySelector(`.tab-btn[data-tab="${tab}"]`);
-  if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-  reqLoc();
-}
-
-// ─── FOTOS ─────────────────────────────────────────
 async function handlePhoto(inputEl, previewId, statusId) {
   const file = inputEl.files[0];
   if (!file) return;
   const statusEl = document.getElementById(statusId);
-  const previewEl = document.getElementById(previewId);
-  if (statusEl) statusEl.textContent = '⏳ Comprimiendo foto...';
+  if (statusEl) statusEl.textContent = '⏳ Procesando...';
   try {
-    const b64 = await compressPhoto(file, 1200, 0.7);
+    const b64 = await compressPhoto(file);
     photoData[inputEl.id] = b64;
+    const previewEl = document.getElementById(previewId);
     if (previewEl) { previewEl.src = b64; previewEl.style.display = 'block'; }
-    const kb = Math.round(b64.length * 0.75 / 1024);
-    if (statusEl) statusEl.textContent = `✅ Listo · ~${kb} KB`;
-  } catch (err) { if (statusEl) statusEl.textContent = '❌ Error al procesar la foto'; }
+    if (statusEl) statusEl.textContent = '✅ Listo';
+  } catch(err) { if(statusEl) statusEl.textContent = '❌ Error'; }
 }
 
-async function compressPhoto(file, maxDim = 1200, quality = 0.7) {
-  return new Promise((resolve, reject) => {
+async function compressPhoto(file) {
+  return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = e => {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
         let w = img.width, h = img.height;
-        if (w > h) { if (w > maxDim) { h = h * maxDim / w; w = maxDim; } }
-        else { if (h > maxDim) { w = w * maxDim / h; h = maxDim; } }
-        canvas.width = Math.round(w); canvas.height = Math.round(h);
-        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL('image/jpeg', quality));
+        if (w > 1200) { h = h * 1200 / w; w = 1200; }
+        if (h > 1200) { w = w * 1200 / h; h = 1200; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.7));
       };
-      img.onerror = reject;
       img.src = e.target.result;
     };
-    reader.onerror = reject;
     reader.readAsDataURL(file);
   });
 }
 
-// ─── COMPETENCIA ───────────────────────────────────
+// Competencia
 function addCompetenciaProducto() {
   const val = document.getElementById('comp-prod-input').value.trim();
   if (!val) return;
@@ -728,13 +629,12 @@ function addCompetenciaProducto() {
   document.getElementById('comp-prod-input').value = '';
   renderCompTags();
 }
-function removeCompTag(i) { compProdsTemp.splice(i, 1); renderCompTags(); }
+function removeCompTag(i) { compProdsTemp.splice(i,1); renderCompTags(); }
 function renderCompTags() {
   const el = document.getElementById('comp-prods-tags');
   el.innerHTML = compProdsTemp.map((p, i) => `<span class="comp-tag">📦 ${p}<button onclick="removeCompTag(${i})">×</button></span>`).join('');
 }
 
-// ─── HELPERS ───────────────────────────────────────
 function adjNum(id, d) { const el = document.getElementById(id); if (el) el.value = Math.max(0, (parseInt(el.value) || 0) + d); }
 function calcDescuento() {
   const reg = parseFloat(document.getElementById('dc-precio-reg').value) || 0;
@@ -747,120 +647,177 @@ function showToast(msg, type) {
   t.textContent = msg;
   t.className = type || 'ok';
   t.style.display = 'block';
-  setTimeout(() => { t.style.display = 'none'; }, 3000);
+  setTimeout(() => t.style.display = 'none', 2000);
 }
 function closeConfirmModal() { document.getElementById('modal-confirm').classList.remove('show'); }
 function showConfirmModal() { document.getElementById('modal-confirm').classList.add('show'); }
+
 function setBtnLoading(id, loading, label) {
   const btn = document.getElementById(id);
   if (!btn) return;
   btn.disabled = loading;
   btn.innerHTML = loading ? '<span class="spin"></span> Enviando...' : label;
 }
+
 function genValidationCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code = '';
   for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
   return code;
 }
-function genFingerprint() { return btoa([navigator.userAgent.length, screen.width, screen.height, navigator.language, new Date().getTimezoneOffset()].join('|')).substring(0, 20); }
 
-// ─── ENVÍO DE DATOS ────────────────────────────────
+function genFingerprint() {
+  return btoa([navigator.userAgent.length, screen.width, screen.height].join('|')).substring(0,20);
+}
+
 async function sendData(hojaName, getFields, photoInputs, btnId, btnLabel) {
   const code = genValidationCode();
   const loc = userLoc ? `${userLoc.lat.toFixed(6)},${userLoc.lng.toFixed(6)}` : '';
   const fd = new FormData();
   fd.append('hoja', hojaName);
-  fd.append('fecha', new Date().toLocaleString('es-CO'));
   fd.append('cedula', currentUser.cedula);
   fd.append('nombre', currentUser.nombre);
-  fd.append('celular', currentUser.celular || '');
   fd.append('ciudad', globalCiudad);
   fd.append('pdv', globalPDV);
   fd.append('ubicacion', loc);
   fd.append('validation_code', code);
   fd.append('device_fingerprint', genFingerprint());
-  fd.append('browser', navigator.userAgent.substring(0, 120));
-  fd.append('screen_resolution', `${screen.width}x${screen.height}`);
-  fd.append('timezone', Intl.DateTimeFormat().resolvedOptions().timeZone);
-  fd.append('exact_timestamp', new Date().toISOString());
   fd.append('exact_lat', userLoc?.lat ?? '');
   fd.append('exact_lng', userLoc?.lng ?? '');
-  Object.entries(getFields()).forEach(([k, v]) => fd.append(k, v));
+  Object.entries(getFields()).forEach(([k,v]) => fd.append(k, v));
   for (const [inputId, fieldName] of photoInputs) { if (photoData[inputId]) fd.append(fieldName, photoData[inputId]); }
   setBtnLoading(btnId, true, btnLabel);
-  try { await fetch(APPS_SCRIPT_URL, { method: 'POST', body: fd }); } catch (e) { console.error(e); }
+  let fotoUrl = '';
+  try {
+    const resp = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: fd });
+    const json = await resp.json();
+    fotoUrl = json.foto1 || '';
+  } catch(e) {}
   setBtnLoading(btnId, false, btnLabel);
   for (const [inputId] of photoInputs) delete photoData[inputId];
   showConfirmModal();
   const now = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
-  journeyLog.push({ hoja: hojaName, time: now });
+  const data = getFields();
+  data.fotoUrl = fotoUrl;
+  journeyLog.push({ hoja: hojaName, time: now, data: data });
 }
 
-// ─── RESUMEN FINAL DE JORNADA ──────────────────────
+// WhatsApp de ingreso
+function copyIngresoWhatsApp() {
+  const ingreso = journeyLog.find(j => j.hoja === 'Ingreso');
+  if (!ingreso) { showToast('Aún no has enviado el reporte de ingreso', 'error'); return; }
+  const fecha = new Date().toLocaleString('es-CO', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  let msg = `🍺 *CENTRAL CERVECERA — INGRESO*\n`;
+  msg += `────────────────────────────────\n`;
+  msg += `📅 *Fecha:* ${fecha}\n`;
+  msg += `👤 *Mercaderista:* ${currentUser?.nombre || ''}\n`;
+  msg += `🏙 *Ciudad:* ${globalCiudad}\n`;
+  msg += `🏪 *PDV:* ${globalPDV}\n`;
+  msg += `────────────────────────────────\n`;
+  if (ingreso.data.observacion) msg += `📋 *Observación:*\n${ingreso.data.observacion}\n`;
+  if (ingreso.data.fotoUrl) msg += `📸 *Selfie:* ${ingreso.data.fotoUrl}\n`;
+  msg += `────────────────────────────────\n`;
+  if (userLoc) msg += `📍 *GPS:* https://www.google.com/maps?q=${userLoc.lat},${userLoc.lng}\n`;
+  doCopy(msg);
+}
+
+// Resumen completo de gestión
 function copyFullJourney() {
-  if (journeyLog.length === 0) { showToast('Aún no hay reportes en esta jornada', 'error'); return; }
-  const now = new Date().toLocaleString('es-CO', { weekday: 'long', day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit' });
-  let full = [`🍺 RESUMEN COMPLETO DE JORNADA`, `📅 ${now}`, `👤 ${currentUser?.nombre || ''} | ${globalCiudad} · ${globalPDV}`, `━━━━━━━━━━━━━━━━━━━━━━━━`, `📊 Total de reportes enviados: ${journeyLog.length}`, ``];
-  journeyLog.forEach((item, idx) => { full.push(`${idx + 1}. ${item.hoja} — ${item.time}`); });
-  full.push(``, `📍 GPS: ${userLoc ? `https://www.google.com/maps?q=${userLoc.lat},${userLoc.lng}` : 'No disponible'}`);
-  doCopy(full.join('\n'));
+  if (journeyLog.length === 0) { showToast('Aún no hay reportes', 'error'); return; }
+  const fechaInicio = new Date().toLocaleString('es-CO', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  let msg = `🍺 *CENTRAL CERVECERA — GESTIÓN COMPLETA*\n`;
+  msg += `────────────────────────────────\n`;
+  msg += `📅 *Fecha:* ${fechaInicio}\n`;
+  msg += `👤 *Mercaderista:* ${currentUser?.nombre || ''}\n`;
+  msg += `🏙 *Ciudad:* ${globalCiudad}\n`;
+  msg += `🏪 *PDV:* ${globalPDV}\n`;
+  msg += `────────────────────────────────\n\n`;
+
+  journeyLog.forEach((item, idx) => {
+    msg += `📌 *${idx+1}. ${item.hoja}* (${item.time})\n`;
+    msg += `────────────────────────────────\n`;
+    if (item.hoja === 'Ingreso') {
+      if (item.data.observacion) msg += `📋 Observación: ${item.data.observacion}\n`;
+      if (item.data.fotoUrl) msg += `📸 Selfie: ${item.data.fotoUrl}\n`;
+    } else if (item.hoja === 'Exhibiciones') {
+      if (item.data.producto) msg += `📦 Producto: ${item.data.producto}\n`;
+      if (item.data.observacion) msg += `📋 Observación: ${item.data.observacion}\n`;
+      if (item.data.fotoUrl) msg += `📸 Foto: ${item.data.fotoUrl}\n`;
+    } else if (item.hoja === 'EjecucionGondola') {
+      if (item.data.producto) msg += `📦 Producto: ${item.data.producto}\n`;
+      if (item.data.caras_propias) msg += `📊 Caras Propias: ${item.data.caras_propias}\n`;
+      if (item.data.caras_competencia) msg += `📊 Caras Competencia: ${item.data.caras_competencia}\n`;
+      if (item.data.observacion) msg += `📋 Observación: ${item.data.observacion}\n`;
+      if (item.data.fotoUrl) msg += `📸 Foto Antes: ${item.data.fotoUrl}\n`;
+      if (item.data.foto2Url) msg += `📸 Foto Después: ${item.data.foto2Url}\n`;
+    } else if (item.hoja === 'ProximosVencer') {
+      if (item.data.producto) msg += `📦 Producto: ${item.data.producto}\n`;
+      if (item.data.fecha_vencimiento) msg += `⏰ Vence: ${item.data.fecha_vencimiento}\n`;
+      if (item.data.cantidad) msg += `🔢 Cantidad: ${item.data.cantidad} und.\n`;
+      if (item.data.observacion) msg += `📋 Observación: ${item.data.observacion}\n`;
+    } else if (item.hoja === 'Descuentos') {
+      if (item.data.producto) msg += `🏷️ Producto: ${item.data.producto}\n`;
+      if (item.data.precio_regular) msg += `💰 Precio Regular: $${item.data.precio_regular}\n`;
+      if (item.data.precio_descuento) msg += `💸 Precio Desc.: $${item.data.precio_descuento}\n`;
+      if (item.data.porcentaje_descuento) msg += `📉 Descuento: ${item.data.porcentaje_descuento}%\n`;
+      if (item.data.observacion) msg += `📋 Observación: ${item.data.observacion}\n`;
+    } else if (item.hoja === 'Agotados') {
+      if (item.data.producto) msg += `❌ Producto: ${item.data.producto}\n`;
+      if (item.data.observacion) msg += `📋 Causa: ${item.data.observacion}\n`;
+    } else if (item.hoja === 'Ventas') {
+      if (item.data.producto) msg += `💰 Producto: ${item.data.producto}\n`;
+      if (item.data.cantidad) msg += `🔢 Cantidad: ${item.data.cantidad} und.\n`;
+      if (item.data.observacion) msg += `📋 Observación: ${item.data.observacion}\n`;
+    } else if (item.hoja === 'Competencia') {
+      if (item.data.marca_competencia) msg += `🏢 Marca: ${item.data.marca_competencia}\n`;
+      if (item.data.accion) msg += `⚡ Acción: ${item.data.accion}\n`;
+      if (item.data.productos) msg += `📦 Productos: ${item.data.productos}\n`;
+      if (item.data.observacion) msg += `📋 Observación: ${item.data.observacion}\n`;
+      if (item.data.fotoUrl) msg += `📸 Foto: ${item.data.fotoUrl}\n`;
+    }
+    msg += `\n`;
+  });
+
+  msg += `────────────────────────────────\n`;
+  if (userLoc) msg += `📍 *GPS Final:* https://www.google.com/maps?q=${userLoc.lat},${userLoc.lng}\n`;
+  msg += `📊 *Total Reportes:* ${journeyLog.length}\n`;
+  doCopy(msg);
 }
 
 function doCopy(text) {
-  if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(() => showToast('✅ Copiado al portapapeles', 'ok')).catch(() => fallbackCopy(text)); }
-  else { fallbackCopy(text); }
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => showToast('✅ Copiado', 'ok')).catch(() => fallbackCopy(text));
+  else fallbackCopy(text);
 }
 function fallbackCopy(text) {
   const ta = document.createElement('textarea');
   ta.value = text;
   ta.style.position = 'fixed'; ta.style.opacity = '0';
   document.body.appendChild(ta);
-  ta.focus(); ta.select();
-  try { document.execCommand('copy'); showToast('✅ Copiado', 'ok'); } catch (_) { showToast('No se pudo copiar', 'error'); }
+  ta.select();
+  try { document.execCommand('copy'); showToast('✅ Copiado', 'ok'); } catch(e) {}
   document.body.removeChild(ta);
 }
 
-// ─── RESET ─────────────────────────────────────────
 function resetTab(tab) {
-  if (!confirm('¿Limpiar todos los campos de esta sección?')) return;
+  if (!confirm('¿Limpiar todos los campos?')) return;
   const form = document.getElementById('form-' + tab);
   if (!form) return;
-  form.querySelectorAll('textarea').forEach(el => el.value = '');
-  form.querySelectorAll('input[type=text], input[type=number], input[type=date]').forEach(el => el.value = '');
+  form.querySelectorAll('textarea, input[type=text], input[type=number], input[type=date]').forEach(el => el.value = '');
   form.querySelectorAll('select').forEach(sel => sel.selectedIndex = 0);
   form.querySelectorAll('img.foto-preview').forEach(img => { img.style.display = 'none'; img.src = ''; });
-  form.querySelectorAll('.foto-status').forEach(el => el.textContent = '');
   form.querySelectorAll('input[type=file]').forEach(el => { delete photoData[el.id]; el.value = ''; });
   if (tab === 'competencia') { compProdsTemp = []; renderCompTags(); }
 }
 
-// ─── SUBMIT: INGRESO ───────────────────────────────
-function submitIngreso(e) { e.preventDefault(); sendData('Ingreso', () => ({ observacion: document.getElementById('i-obs').value }), [['foto-ingreso', 'foto1_data']], 'btn-ingreso', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Enviar Ingreso'); document.getElementById('i-obs').value = ''; clearPhotoUI('foto-ingreso', 'prev-ingreso', 'stat-ingreso'); }
-// ─── SUBMIT: EXHIBICIONES ──────────────────────────
-function submitExhibiciones(e) { e.preventDefault(); const prod = document.getElementById('ex-producto').value; if (!prod) { showToast('Selecciona un producto', 'error'); return; } sendData('Exhibiciones', () => ({ producto: prod, observacion: document.getElementById('ex-obs').value }), [['foto-exhibiciones', 'foto1_data']], 'btn-exhibiciones', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Enviar'); document.getElementById('ex-obs').value = ''; document.getElementById('ex-producto').selectedIndex = 0; clearPhotoUI('foto-exhibiciones', 'prev-exhibiciones', 'stat-exhibiciones'); }
-// ─── SUBMIT: GÓNDOLA ───────────────────────────────
-function submitGondola(e) { e.preventDefault(); const prod = document.getElementById('gon-producto').value; if (!prod) { showToast('Selecciona un producto', 'error'); return; } sendData('EjecucionGondola', () => ({ producto: prod, caras_propias: document.getElementById('gon-caras-p').value, caras_competencia: document.getElementById('gon-caras-c').value, observacion: document.getElementById('gon-obs').value }), [['foto-gon-antes', 'foto1_data'], ['foto-gon-despues', 'foto2_data']], 'btn-gondola', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Enviar'); document.getElementById('gon-producto').selectedIndex = 0; document.getElementById('gon-caras-p').value = '0'; document.getElementById('gon-caras-c').value = '0'; document.getElementById('gon-obs').value = ''; clearPhotoUI('foto-gon-antes', 'prev-gon-antes', 'stat-gon-antes'); clearPhotoUI('foto-gon-despues', 'prev-gon-despues', 'stat-gon-despues'); }
-// ─── SUBMIT: PRÓXIMOS A VENCER ─────────────────────
-function submitProxVencer(e) { e.preventDefault(); const prod = document.getElementById('pv-producto').value; if (!prod) { showToast('Selecciona un producto', 'error'); return; } sendData('ProximosVencer', () => ({ producto: prod, fecha_vencimiento: document.getElementById('pv-fecha').value, cantidad: document.getElementById('pv-cant').value, observacion: document.getElementById('pv-obs').value }), [], 'btn-proxvencer', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Reportar'); document.getElementById('pv-producto').selectedIndex = 0; document.getElementById('pv-fecha').value = ''; document.getElementById('pv-cant').value = '0'; document.getElementById('pv-obs').value = ''; }
-// ─── SUBMIT: DESCUENTOS ────────────────────────────
-function submitDescuentos(e) { e.preventDefault(); const prod = document.getElementById('dc-producto').value; const reg = document.getElementById('dc-precio-reg').value; const desc = document.getElementById('dc-precio-desc').value; const pct = document.getElementById('dc-pct').value; if (!prod) { showToast('Selecciona un producto', 'error'); return; } if (!reg || !desc) { showToast('Ingresa los precios', 'error'); return; } sendData('Descuentos', () => ({ producto: prod, precio_regular: reg, precio_descuento: desc, porcentaje_descuento: pct, observacion: document.getElementById('dc-obs').value }), [], 'btn-descuentos', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Reportar'); document.getElementById('dc-producto').selectedIndex = 0; document.getElementById('dc-precio-reg').value = ''; document.getElementById('dc-precio-desc').value = ''; document.getElementById('dc-pct').value = ''; document.getElementById('dc-obs').value = ''; }
-// ─── SUBMIT: AGOTADOS ──────────────────────────────
-function submitAgotados(e) { e.preventDefault(); const prod = document.getElementById('ag-producto').value; if (!prod) { showToast('Selecciona un producto', 'error'); return; } sendData('Agotados', () => ({ producto: prod, observacion: document.getElementById('ag-obs').value }), [], 'btn-agotados', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Reportar'); document.getElementById('ag-producto').selectedIndex = 0; document.getElementById('ag-obs').value = ''; }
-// ─── SUBMIT: VENTAS ────────────────────────────────
-function submitVentas(e) { e.preventDefault(); const prod = document.getElementById('vt-producto').value; const cant = document.getElementById('vt-cant').value; if (!prod) { showToast('Selecciona un producto', 'error'); return; } sendData('Ventas', () => ({ producto: prod, cantidad: cant, observacion: document.getElementById('vt-obs').value }), [], 'btn-ventas', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Registrar'); document.getElementById('vt-producto').selectedIndex = 0; document.getElementById('vt-cant').value = '1'; document.getElementById('vt-obs').value = ''; }
-// ─── SUBMIT: COMPETENCIA ───────────────────────────
-function submitCompetencia(e) { e.preventDefault(); const marca = document.getElementById('comp-marca').value.trim(); if (!marca) { showToast('Escribe la marca de la competencia', 'error'); return; } const prods = compProdsTemp.join(', ') || '—'; const accion = document.getElementById('comp-accion').value; sendData('Competencia', () => ({ marca_competencia: marca, accion: accion, productos: prods, observacion: document.getElementById('comp-obs').value }), [['foto-competencia', 'foto1_data']], 'btn-competencia', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Reportar'); document.getElementById('comp-marca').value = ''; compProdsTemp = []; renderCompTags(); document.getElementById('comp-obs').value = ''; clearPhotoUI('foto-competencia', 'prev-competencia', 'stat-competencia'); }
-
-function clearPhotoUI(inputId, previewId, statusId) {
-  delete photoData[inputId];
-  const prev = document.getElementById(previewId);
-  if (prev) { prev.style.display = 'none'; prev.src = ''; }
-  const stat = document.getElementById(statusId);
-  if (stat) stat.textContent = '';
-  const inp = document.getElementById(inputId);
-  if (inp) inp.value = '';
-}
+// Submit individuales
+function submitIngreso(e) { e.preventDefault(); sendData('Ingreso', () => ({ observacion: document.getElementById('i-obs').value }), [['foto-ingreso','foto1_data']], 'btn-ingreso', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Enviar Ingreso'); document.getElementById('i-obs').value = ''; document.getElementById('foto-ingreso').value = ''; document.getElementById('prev-ingreso').style.display = 'none'; }
+function submitExhibiciones(e) { e.preventDefault(); const prod = document.getElementById('ex-producto').value; if(!prod){showToast('Selecciona producto','error');return;} sendData('Exhibiciones', () => ({ producto: prod, observacion: document.getElementById('ex-obs').value }), [['foto-exhibiciones','foto1_data']], 'btn-exhibiciones', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Enviar'); document.getElementById('ex-obs').value = ''; document.getElementById('ex-producto').selectedIndex = 0; }
+function submitGondola(e) { e.preventDefault(); const prod = document.getElementById('gon-producto').value; if(!prod){showToast('Selecciona producto','error');return;} sendData('EjecucionGondola', () => ({ producto: prod, caras_propias: document.getElementById('gon-caras-p').value, caras_competencia: document.getElementById('gon-caras-c').value, observacion: document.getElementById('gon-obs').value }), [['foto-gon-antes','foto1_data'],['foto-gon-despues','foto2_data']], 'btn-gondola', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Enviar'); document.getElementById('gon-producto').selectedIndex = 0; document.getElementById('gon-caras-p').value = '0'; document.getElementById('gon-caras-c').value = '0'; document.getElementById('gon-obs').value = ''; }
+function submitProxVencer(e) { e.preventDefault(); const prod = document.getElementById('pv-producto').value; if(!prod){showToast('Selecciona producto','error');return;} sendData('ProximosVencer', () => ({ producto: prod, fecha_vencimiento: document.getElementById('pv-fecha').value, cantidad: document.getElementById('pv-cant').value, observacion: document.getElementById('pv-obs').value }), [], 'btn-proxvencer', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Reportar'); document.getElementById('pv-producto').selectedIndex = 0; document.getElementById('pv-fecha').value = ''; document.getElementById('pv-cant').value = '0'; document.getElementById('pv-obs').value = ''; }
+function submitDescuentos(e) { e.preventDefault(); const prod = document.getElementById('dc-producto').value; const reg = document.getElementById('dc-precio-reg').value; const desc = document.getElementById('dc-precio-desc').value; const pct = document.getElementById('dc-pct').value; if(!prod){showToast('Selecciona producto','error');return;} if(!reg || !desc){showToast('Ingresa precios','error');return;} sendData('Descuentos', () => ({ producto: prod, precio_regular: reg, precio_descuento: desc, porcentaje_descuento: pct, observacion: document.getElementById('dc-obs').value }), [], 'btn-descuentos', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Reportar'); document.getElementById('dc-producto').selectedIndex = 0; document.getElementById('dc-precio-reg').value = ''; document.getElementById('dc-precio-desc').value = ''; document.getElementById('dc-pct').value = ''; document.getElementById('dc-obs').value = ''; }
+function submitAgotados(e) { e.preventDefault(); const prod = document.getElementById('ag-producto').value; if(!prod){showToast('Selecciona producto','error');return;} sendData('Agotados', () => ({ producto: prod, observacion: document.getElementById('ag-obs').value }), [], 'btn-agotados', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Reportar'); document.getElementById('ag-producto').selectedIndex = 0; document.getElementById('ag-obs').value = ''; }
+function submitVentas(e) { e.preventDefault(); const prod = document.getElementById('vt-producto').value; const cant = document.getElementById('vt-cant').value; if(!prod){showToast('Selecciona producto','error');return;} sendData('Ventas', () => ({ producto: prod, cantidad: cant, observacion: document.getElementById('vt-obs').value }), [], 'btn-ventas', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Registrar'); document.getElementById('vt-producto').selectedIndex = 0; document.getElementById('vt-cant').value = '1'; document.getElementById('vt-obs').value = ''; }
+function submitCompetencia(e) { e.preventDefault(); const marca = document.getElementById('comp-marca').value.trim(); if(!marca){showToast('Escribe la marca','error');return;} const prods = compProdsTemp.join(', ') || '—'; const accion = document.getElementById('comp-accion').value; sendData('Competencia', () => ({ marca_competencia: marca, accion: accion, productos: prods, observacion: document.getElementById('comp-obs').value }), [['foto-competencia','foto1_data']], 'btn-competencia', '<svg viewBox="0 0 24 24"><use href="#ic-send"/></svg> Reportar'); document.getElementById('comp-marca').value = ''; compProdsTemp = []; renderCompTags(); document.getElementById('comp-obs').value = ''; document.getElementById('foto-competencia').value = ''; document.getElementById('prev-competencia').style.display = 'none'; }
 </script>
 </body>
 </html>
