@@ -85,7 +85,6 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
 .hbadge{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:4px 9px;text-align:right;}
 .hbadge b{font-family:var(--font-h);font-size:.62rem;font-weight:700;color:#fff;display:block;}
 .hbadge span{font-size:.52rem;color:rgba(255,255,255,.6);}
-/* Salir — visible y claro */
 .btn-out{background:rgba(255,89,89,.25);border:1.5px solid rgba(255,120,120,.4);border-radius:8px;
   padding:6px 11px;display:flex;align-items:center;gap:5px;cursor:pointer;flex-shrink:0;}
 .btn-out:active{background:rgba(255,89,89,.45);}
@@ -310,7 +309,7 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
       <button class="breset" onclick="resetTab('ingreso')">Limpiar campos</button>
     </div>
 
-    <!-- EXHIBICIONES - Ahora abre GALERIA (sin capture) -->
+    <!-- EXHIBICIONES -->
     <div class="tform" id="form-exhibiciones">
       <div class="ubox" id="ub-exhibiciones"></div>
       <div class="card"><div class="clbl"><svg viewBox="0 0 24 24"><use href="#ic-store"/></svg>Producto</div><div class="sw"><select class="sel psel" id="ex-prod"><option value="">Selecciona producto</option></select></div></div>
@@ -318,6 +317,7 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
         <div class="fbox" onclick="document.getElementById('f-ex').click()">
           <input type="file" accept="image/*" id="f-ex" style="display:none" onchange="handlePhoto(this,'p-ex','s-ex')">
           <div class="fic"><svg viewBox="0 0 24 24"><use href="#ic-cam"/></svg></div><div class="flbl">Seleccionar Foto</div>
+          <div class="fsub">Toca — abre galeria</div>
           <img class="fprev" id="p-ex" alt=""><div class="fstat" id="s-ex"></div>
         </div>
       </div>
@@ -326,7 +326,7 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
       <button class="breset" onclick="resetTab('exhibiciones')">Limpiar campos</button>
     </div>
 
-    <!-- GONDOLA - Ahora abre GALERIA (sin capture) -->
+    <!-- GONDOLA -->
     <div class="tform" id="form-gondola">
       <div class="ubox" id="ub-gondola"></div>
       <div class="card"><div class="sw"><select class="sel psel" id="gon-prod"><option value="">Selecciona producto</option></select></div></div>
@@ -334,11 +334,13 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
         <div><div class="fbox" onclick="document.getElementById('f-ga').click()">
           <input type="file" accept="image/*" id="f-ga" style="display:none" onchange="handlePhoto(this,'p-ga','s-ga')">
           <div class="fic"><svg viewBox="0 0 24 24"><use href="#ic-cam"/></svg></div><div class="flbl">ANTES</div>
+          <div class="fsub">Galeria</div>
           <img class="fprev" id="p-ga" alt=""><div class="fstat" id="s-ga"></div>
         </div></div>
         <div><div class="fbox" onclick="document.getElementById('f-gd').click()">
           <input type="file" accept="image/*" id="f-gd" style="display:none" onchange="handlePhoto(this,'p-gd','s-gd')">
           <div class="fic"><svg viewBox="0 0 24 24"><use href="#ic-cam"/></svg></div><div class="flbl">DESPUES</div>
+          <div class="fsub">Galeria</div>
           <img class="fprev" id="p-gd" alt=""><div class="fstat" id="s-gd"></div>
         </div></div>
       </div></div>
@@ -400,7 +402,7 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
       <button class="breset" onclick="resetTab('ventas')">Limpiar campos</button>
     </div>
 
-    <!-- COMPETENCIA - Ahora abre GALERIA (sin capture) -->
+    <!-- COMPETENCIA -->
     <div class="tform" id="form-competencia">
       <div class="ubox" id="ub-competencia"></div>
       <div class="card ct"><div class="clbl t"><svg viewBox="0 0 24 24"><use href="#ic-users"/></svg>Competencia</div>
@@ -413,6 +415,7 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
         <div class="fbox" onclick="document.getElementById('f-co').click()">
           <input type="file" accept="image/*" id="f-co" style="display:none" onchange="handlePhoto(this,'p-co','s-co')">
           <div class="fic"><svg viewBox="0 0 24 24"><use href="#ic-cam"/></svg></div><div class="flbl">Seleccionar Foto</div>
+          <div class="fsub">Toca — abre galeria</div>
           <img class="fprev" id="p-co" alt=""><div class="fstat" id="s-co"></div>
         </div>
       </div>
@@ -482,7 +485,7 @@ async function loadProds(){
   try{const j=await gviz('Productos');const rows=j.table.rows||[];
     const two=rows.some(r=>r.c[1]?.v);
     if(two){rows.forEach(r=>{const m=(r.c[0]?.v||'').toString().trim(),n=(r.c[1]?.v||'').toString().trim();if(n)prods.push({marca:m||'Otros',nombre:n});});}
-    else{rows.forEach(r=>{const p=(r.c[0]?.v||'').toString().trim();if(p)prods.push({marca:'Productos',nombre:p});});}}catch(e){}
+    else{rows.forEach(r=>{const p=(r.c[0]?.v||'').toString().trim();if(p)prods.push({marca:p.trim().split(/\s+/)[0],nombre:p});});}}catch(e){}
 }
 
 // LOGIN
@@ -508,8 +511,7 @@ function bootApp(){
   buildProds();show('app');tab('ingreso');
 }
 
-// DROPDOWNS — primera palabra por categoria (SOLO PRIMERA PALABRA VISIBLE)
-function fw(s){return s.trim().split(/\s+/)[0];}
+// DROPDOWNS — nombre completo del producto, primera palabra como categoria
 function buildProds(){
   const g={};
   prods.forEach(p=>{if(!g[p.marca])g[p.marca]=[];g[p.marca].push(p.nombre);});
@@ -523,8 +525,8 @@ function buildProds(){
       const og=document.createElement('optgroup');og.label='— '+marca+' —';
       g[marca].sort().forEach(n=>{
         const o=document.createElement('option');
-        o.value=n; // Guardamos el nombre completo en el value
-        o.textContent=fw(n); // Mostramos SOLO la primera palabra
+        o.value=n;
+        o.textContent=n; // Nombre completo del producto
         og.appendChild(o);
       });
       sel.appendChild(og);
@@ -622,7 +624,7 @@ function copyIngresoWA(){
 }
 
 // ═══════════════════════════════════════════════════════════
-// WHATSAPP REPORTE COMPLETO — formato estructurado por secciones
+// WHATSAPP REPORTE COMPLETO
 // ═══════════════════════════════════════════════════════════
 function copyJourney(){
   if(jLog.length===0){toast('Aun no hay reportes','error');return;}
@@ -632,10 +634,8 @@ function copyJourney(){
   const fecha=`${D[now.getDay()]}, ${now.getDate()} de ${M[now.getMonth()]} de ${now.getFullYear()}`;
   const sep='────────────────────────────────';
 
-  // Mapa producto -> marca
   const pm={};prods.forEach(p=>{if(typeof p==='object')pm[p.nombre]=p.marca;});
 
-  // Ventas agrupadas por marca
   const vm={};let total=0;
   jLog.filter(j=>j.hoja==='Ventas').forEach(v=>{
     const prod=v.fields.producto||'',marca=pm[prod]||'Otros',cant=parseInt(v.fields.cantidad)||0;
@@ -659,7 +659,6 @@ function copyJourney(){
   m+=`🏪 *PDV:* ${pdv}\n`;
   m+=`${sep}\n`;
 
-  // ─ Ventas por marca ─────────────────────────────────────
   if(ord.length>0){
     ord.forEach(marca=>{
       const em=marcaEmoji[marca]||'📦';
@@ -676,7 +675,6 @@ function copyJourney(){
     m+=`${sep}\n`;
   }
 
-  // ─ Exhibiciones ─────────────────────────────────────────
   const exh=jLog.filter(j=>j.hoja==='Exhibiciones');
   if(exh.length>0){
     m+=`\n🖼 *EXHIBICIONES*\n${sep}\n`;
@@ -688,7 +686,6 @@ function copyJourney(){
     m+=`${sep}\n`;
   }
 
-  // ─ Gondola ──────────────────────────────────────────────
   const gon=jLog.filter(j=>j.hoja==='EjecucionGondola');
   if(gon.length>0){
     m+=`\n🏪 *EJECUCION GONDOLA*\n${sep}\n`;
@@ -702,7 +699,6 @@ function copyJourney(){
     m+=`${sep}\n`;
   }
 
-  // ─ Agotados ─────────────────────────────────────────────
   const agt=jLog.filter(j=>j.hoja==='Agotados');
   if(agt.length>0){
     m+=`\n❌ *AGOTADOS*\n${sep}\n`;
@@ -710,7 +706,6 @@ function copyJourney(){
     m+=`${sep}\n`;
   }
 
-  // ─ Proximos a Vencer ────────────────────────────────────
   const pvs=jLog.filter(j=>j.hoja==='ProximosVencer');
   if(pvs.length>0){
     m+=`\n⏰ *PROXIMOS A VENCER*\n${sep}\n`;
@@ -722,7 +717,6 @@ function copyJourney(){
     m+=`${sep}\n`;
   }
 
-  // ─ Descuentos ───────────────────────────────────────────
   const dcs=jLog.filter(j=>j.hoja==='Descuentos');
   if(dcs.length>0){
     m+=`\n🏷 *DESCUENTOS*\n${sep}\n`;
@@ -733,7 +727,6 @@ function copyJourney(){
     m+=`${sep}\n`;
   }
 
-  // ─ Competencia ──────────────────────────────────────────
   const cos=jLog.filter(j=>j.hoja==='Competencia');
   if(cos.length>0){
     m+=`\n🏢 *COMPETENCIA*\n${sep}\n`;
@@ -746,7 +739,6 @@ function copyJourney(){
     m+=`${sep}\n`;
   }
 
-  // ─ Observacion general ──────────────────────────────────
   const ing=jLog.find(j=>j.hoja==='Ingreso');
   if(ing?.fields?.observacion){
     m+=`\n📋 *OBSERVACION GENERAL:*\n${ing.fields.observacion}\n${sep}\n`;
