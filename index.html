@@ -205,6 +205,13 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
   font-size:.75rem;padding:0;line-height:1;}
 .comp-tag button:active{color:var(--red);}
 
+/* RESUMEN CARD */
+.resumen-card{background:var(--gs);border:1px solid var(--gb);border-radius:var(--r);
+  padding:8px 12px;margin-top:8px;margin-bottom:8px;}
+.resumen-card .resumen-titulo{font-size:.6rem;font-weight:800;text-transform:uppercase;
+  color:var(--g3);letter-spacing:.1em;margin-bottom:4px;}
+.resumen-card .resumen-texto{font-size:.65rem;color:var(--mid);font-weight:500;}
+
 /* SUBMIT / RESET BUTTONS */
 .btn-send{width:100%;background:linear-gradient(135deg,var(--g1) 0%,var(--g3) 100%);color:white;
   border:none;border-radius:var(--r-lg);padding:14px 20px;font-family:var(--font-h);
@@ -307,7 +314,7 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
 </head>
 <body>
 
-<!-- SVG SPRITE -->
+<!-- SVG SPRITE (mismo que antes) -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
   <symbol id="ic-beer" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
     <path d="M5 3h11l1 3H4L5 3z"/><path d="M4 6v13a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V6"/><path d="M17 9h2a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2"/>
@@ -740,6 +747,11 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
       <div class="items-list" id="dc-items-list">
         <div class="items-empty" id="dc-items-empty">Sin productos agregados aún</div>
       </div>
+      <!-- RESUMEN EN TIEMPO REAL -->
+      <div class="resumen-card" id="dc-resumen">
+        <div class="resumen-titulo">📋 Resumen de lo que agregas:</div>
+        <div class="resumen-texto" id="dc-resumen-texto">Aún no has agregado productos con descuento</div>
+      </div>
       <!-- Add form -->
       <div style="background:var(--gs);border:1px solid var(--gb);border-radius:var(--r);padding:10px;margin-bottom:8px;">
         <div class="f">
@@ -803,6 +815,11 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
       <div class="items-list" id="ag-items-list">
         <div class="items-empty" id="ag-items-empty">Sin productos reportados aún</div>
       </div>
+      <!-- RESUMEN EN TIEMPO REAL -->
+      <div class="resumen-card" id="ag-resumen">
+        <div class="resumen-titulo">📋 Resumen de lo que agregas:</div>
+        <div class="resumen-texto" id="ag-resumen-texto">Aún no has agregado productos agotados</div>
+      </div>
       <!-- Add form -->
       <div style="background:var(--gs);border:1px solid rgba(198,40,40,.15);border-radius:var(--r);padding:10px;margin-bottom:8px;">
         <div class="f">
@@ -846,6 +863,11 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
       <!-- Items list -->
       <div class="items-list" id="vt-items-list">
         <div class="items-empty" id="vt-items-empty">Sin ventas registradas aún</div>
+      </div>
+      <!-- RESUMEN EN TIEMPO REAL -->
+      <div class="resumen-card" id="vt-resumen">
+        <div class="resumen-titulo">📋 Resumen de ventas:</div>
+        <div class="resumen-texto" id="vt-resumen-texto">Aún no has registrado ventas</div>
       </div>
       <!-- Add form -->
       <div style="background:var(--gs);border:1px solid rgba(69,39,160,.15);border-radius:var(--r);padding:10px;margin-bottom:8px;">
@@ -914,6 +936,11 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
       <!-- Items list competencia -->
       <div class="items-list" id="comp-items-list" style="margin-top:10px;">
         <div class="items-empty" id="comp-items-empty">Sin registros de competencia aún</div>
+      </div>
+      <!-- RESUMEN EN TIEMPO REAL -->
+      <div class="resumen-card" id="comp-resumen">
+        <div class="resumen-titulo">📋 Resumen de hallazgos:</div>
+        <div class="resumen-texto" id="comp-resumen-texto">Aún no has agregado hallazgos de competencia</div>
       </div>
       <div style="background:var(--gs);border:1px solid rgba(0,105,92,.15);border-radius:var(--r);padding:10px;margin-bottom:8px;margin-top:4px;">
         <div class="f">
@@ -1000,7 +1027,7 @@ body{font-family:var(--font);background:var(--gs);color:var(--dark);min-height:1
 // ═══════════════════════════════════════════════════
 //  CONFIGURACIÓN
 // ═══════════════════════════════════════════════════
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyfadi9_VJEYmL51AUrY95lqY-nBBXQafo2sqlz_5Kx_i68nPvowpORnZsDK3WHvtaPTw/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3o7hBs6aAB3DfWjzf_LiRjC_YEqOybmUyhYYdhHNSvEGfjwL-PM1JU2Em4DDrhQ-0LQ/exec';
 const CONFIG_SS_ID    = '185O1g8wAYZoQn3fiPkOOnVhauaDiTR_hC12f_34oxh4';
 
 // ─── ESTADO GLOBAL ───────────────────────────────
@@ -1312,6 +1339,68 @@ async function compressPhoto(file, maxDim = 1200, quality = 0.7) {
   });
 }
 
+// ─── FUNCIONES DE RESUMEN EN TIEMPO REAL ──────────
+function updateDcResumen() {
+  const resumenEl = document.getElementById('dc-resumen-texto');
+  if (!resumenEl) return;
+  if (dcItems.length === 0) {
+    resumenEl.innerHTML = 'Aún no has agregado productos con descuento';
+    return;
+  }
+  let html = '';
+  dcItems.forEach(item => {
+    html += `• ${item.prod}: $${item.reg} → $${item.desc} (${item.pct}% off)<br>`;
+  });
+  resumenEl.innerHTML = html;
+}
+
+function updateAgResumen() {
+  const resumenEl = document.getElementById('ag-resumen-texto');
+  if (!resumenEl) return;
+  if (agItems.length === 0) {
+    resumenEl.innerHTML = 'Aún no has agregado productos agotados';
+    return;
+  }
+  let html = '';
+  agItems.forEach(item => {
+    html += `• ${item}<br>`;
+  });
+  resumenEl.innerHTML = html;
+}
+
+function updateVtResumen() {
+  const resumenEl = document.getElementById('vt-resumen-texto');
+  if (!resumenEl) return;
+  if (vtItems.length === 0) {
+    resumenEl.innerHTML = 'Aún no has registrado ventas';
+    return;
+  }
+  let total = 0;
+  let html = '';
+  vtItems.forEach(item => {
+    total += item.cant;
+    html += `• ${item.prod}: ${item.cant} und.<br>`;
+  });
+  resumenEl.innerHTML = `<strong>Total: ${total} unidades</strong><br>${html}`;
+}
+
+function updateCompResumen() {
+  const resumenEl = document.getElementById('comp-resumen-texto');
+  if (!resumenEl) return;
+  if (compItems.length === 0) {
+    resumenEl.innerHTML = 'Aún no has agregado hallazgos de competencia';
+    return;
+  }
+  let html = '';
+  compItems.forEach(item => {
+    html += `• ${item.marca}: ${item.accion}<br>`;
+    if (item.prods && item.prods !== '—') {
+      html += `  <span style="font-size:0.6rem;">Productos: ${item.prods}</span><br>`;
+    }
+  });
+  resumenEl.innerHTML = html;
+}
+
 // ─── MULTI-ITEM HELPERS ───────────────────────────
 // DESCUENTOS
 function addDescuentoItem() {
@@ -1320,8 +1409,10 @@ function addDescuentoItem() {
   const desc    = document.getElementById('dc-precio-desc').value;
   const pct     = document.getElementById('dc-pct').value;
   if (!prod) { showToast('Selecciona un producto', 'error'); return; }
+  if (!reg || !desc) { showToast('Ingresa los precios', 'error'); return; }
   dcItems.push({ prod, reg: reg||'0', desc: desc||'0', pct: pct||'0' });
   renderDcItems();
+  updateDcResumen();
   document.getElementById('dc-producto').selectedIndex = 0;
   document.getElementById('dc-precio-reg').value = '';
   document.getElementById('dc-precio-desc').value = '';
@@ -1331,6 +1422,7 @@ function addDescuentoItem() {
 function removeDcItem(i) {
   dcItems.splice(i,1);
   renderDcItems();
+  updateDcResumen();
 }
 function renderDcItems() {
   const list = document.getElementById('dc-items-list');
@@ -1364,12 +1456,14 @@ function addAgotadoItem() {
   if (agItems.includes(prod)) { showToast('Ya está en la lista', 'error'); return; }
   agItems.push(prod);
   renderAgItems();
+  updateAgResumen();
   document.getElementById('ag-producto').selectedIndex = 0;
   showToast('Producto agregado ✓', 'ok');
 }
 function removeAgItem(i) {
   agItems.splice(i,1);
   renderAgItems();
+  updateAgResumen();
 }
 function renderAgItems() {
   const list = document.getElementById('ag-items-list');
@@ -1406,10 +1500,12 @@ function addVentaItem() {
   if (existing) {
     existing.cant += cant;
     renderVtItems();
+    updateVtResumen();
     showToast(`Cantidad actualizada ✓`, 'ok');
   } else {
     vtItems.push({ prod, cant });
     renderVtItems();
+    updateVtResumen();
     showToast('Producto agregado ✓', 'ok');
   }
   document.getElementById('vt-producto').selectedIndex = 0;
@@ -1418,6 +1514,7 @@ function addVentaItem() {
 function removeVtItem(i) {
   vtItems.splice(i,1);
   renderVtItems();
+  updateVtResumen();
 }
 function renderVtItems() {
   const list = document.getElementById('vt-items-list');
@@ -1480,11 +1577,13 @@ function addCompetenciaItem() {
   compProdsTemp = [];
   renderCompTags();
   renderCompItems();
+  updateCompResumen();
   showToast('Hallazgo agregado ✓', 'ok');
 }
 function removeCompItem(i) {
   compItems.splice(i,1);
   renderCompItems();
+  updateCompResumen();
 }
 function renderCompItems() {
   const list = document.getElementById('comp-items-list');
@@ -1588,39 +1687,104 @@ function setBtnLoading(id, loading, label) {
 }
 
 // ─── WHATSAPP TEXT BUILDER ────────────────────────
-function buildWaText(hoja, code, fields, extras) {
+function buildWaText(hoja, code, photoUrls) {
   const now = new Date().toLocaleString('es-CO', {
     weekday:'long', day:'2-digit', month:'long', hour:'2-digit', minute:'2-digit'
   });
   const loc  = userLoc ? `${userLoc.lat.toFixed(6)},${userLoc.lng.toFixed(6)}` : '';
-  const gmap = loc ? `🗺️ https://www.google.com/maps?q=${loc}` : '❌ GPS no disponible';
-  const sep  = '━━━━━━━━━━━━━━━━━━━━━━━━';
-
+  const gmap = loc ? `https://www.google.com/maps?q=${loc}` : 'GPS no disponible';
+  
   let lines = [
-    `🍺 *CENTRAL CERVECERA — CAMPO*`,
-    sep,
-    `📋 *Reporte:* ${hoja}`,
-    `📅 *Fecha:* ${now}`,
-    `👤 *Mercaderista:* ${currentUser?.nombre || ''}`,
-    `🪪 *Cédula:* ${currentUser?.cedula || ''}`,
-    `📍 *Ciudad:* ${globalCiudad}`,
-    `🏪 *PDV:* ${globalPDV}`,
-    sep,
+    `🍺 CENTRAL CERVECERA`,
+    `Reporte: ${hoja}`,
+    `Fecha: ${now}`,
+    `Mercaderista: ${currentUser?.nombre || ''} (${currentUser?.cedula || ''})`,
+    `PDV: ${globalCiudad} - ${globalPDV}`,
+    ``
   ];
 
-  // Extra fields
-  Object.entries(fields || {}).forEach(([k, v]) => {
-    if (v && v !== '0') lines.push(`  • *${k}:* ${v}`);
-  });
-
-  // Extras (multi-items, etc.)
-  if (extras && extras.length) {
-    extras.forEach(line => lines.push(line));
+  // Agregar contenido según el tipo de reporte
+  if (hoja === 'Ingreso') {
+    const obs = document.getElementById('i-obs')?.value || '';
+    if (obs) lines.push(`Observación: ${obs}`);
+    if (photoUrls.foto1) lines.push(`Selfie: ${photoUrls.foto1}`);
+  }
+  else if (hoja === 'Exhibiciones') {
+    const prod = document.getElementById('ex-producto')?.value || '';
+    const obs = document.getElementById('ex-obs')?.value || '';
+    if (prod) lines.push(`Producto: ${prod}`);
+    if (obs) lines.push(`Observación: ${obs}`);
+    if (photoUrls.foto1) lines.push(`Foto: ${photoUrls.foto1}`);
+  }
+  else if (hoja === 'EjecucionGondola') {
+    const prod = document.getElementById('gon-producto')?.value || '';
+    const cp = document.getElementById('gon-caras-p')?.value || '0';
+    const cc = document.getElementById('gon-caras-c')?.value || '0';
+    const obs = document.getElementById('gon-obs')?.value || '';
+    if (prod) lines.push(`Producto: ${prod}`);
+    lines.push(`Caras Propias: ${cp}`);
+    lines.push(`Caras Competencia: ${cc}`);
+    if (obs) lines.push(`Observación: ${obs}`);
+    if (photoUrls.foto1) lines.push(`Foto Antes: ${photoUrls.foto1}`);
+    if (photoUrls.foto2) lines.push(`Foto Después: ${photoUrls.foto2}`);
+  }
+  else if (hoja === 'ProximosVencer') {
+    const prod = document.getElementById('pv-producto')?.value || '';
+    const fecha = document.getElementById('pv-fecha')?.value || '';
+    const cant = document.getElementById('pv-cant')?.value || '0';
+    const obs = document.getElementById('pv-obs')?.value || '';
+    if (prod) lines.push(`Producto: ${prod}`);
+    if (fecha) lines.push(`Vence: ${fecha}`);
+    lines.push(`Cantidad: ${cant} und.`);
+    if (obs) lines.push(`Observación: ${obs}`);
+  }
+  else if (hoja === 'Descuentos') {
+    if (dcItems.length > 0) {
+      lines.push(`Productos con descuento:`);
+      dcItems.forEach(it => {
+        lines.push(`  • ${it.prod}: $${it.reg} → $${it.desc} (${it.pct}%)`);
+      });
+    }
+    const obs = document.getElementById('dc-obs')?.value || '';
+    if (obs) lines.push(`Observación: ${obs}`);
+  }
+  else if (hoja === 'Agotados') {
+    if (agItems.length > 0) {
+      lines.push(`Productos Agotados:`);
+      agItems.forEach(p => {
+        lines.push(`  • ${p}`);
+      });
+    }
+    const obs = document.getElementById('ag-obs')?.value || '';
+    if (obs) lines.push(`Causa: ${obs}`);
+  }
+  else if (hoja === 'Ventas') {
+    if (vtItems.length > 0) {
+      const total = vtItems.reduce((s, it) => s + it.cant, 0);
+      lines.push(`Ventas (Total: ${total} und.):`);
+      vtItems.forEach(it => {
+        lines.push(`  • ${it.prod}: ${it.cant} und.`);
+      });
+    }
+    const obs = document.getElementById('vt-obs')?.value || '';
+    if (obs) lines.push(`Observación: ${obs}`);
+  }
+  else if (hoja === 'Competencia') {
+    if (compItems.length > 0) {
+      lines.push(`Hallazgos de Competencia:`);
+      compItems.forEach(it => {
+        lines.push(`  • ${it.marca}: ${it.accion}`);
+        if (it.prods && it.prods !== '—') lines.push(`    Productos: ${it.prods}`);
+      });
+    }
+    const obs = document.getElementById('comp-obs')?.value || '';
+    if (obs) lines.push(`Observación: ${obs}`);
+    if (photoUrls.foto1) lines.push(`Foto Evidencia: ${photoUrls.foto1}`);
   }
 
-  lines.push(sep);
-  lines.push(`🗺️ *GPS:* ${gmap}`);
-  lines.push(`🔑 *Código:* ${code}`);
+  lines.push(``);
+  lines.push(`📍 GPS: ${gmap}`);
+  lines.push(`🔑 Código: ${code}`);
 
   return lines.join('\n');
 }
@@ -1638,15 +1802,15 @@ function copyFullJourney() {
   const sep = '══════════════════════════════';
   const now = new Date().toLocaleString('es-CO',{weekday:'long',day:'2-digit',month:'long',hour:'2-digit',minute:'2-digit'});
   let full = [
-    `🍺 *RESUMEN COMPLETO DE JORNADA*`,
+    `🍺 RESUMEN COMPLETO DE JORNADA`,
     `📅 ${now}`,
     `👤 ${currentUser?.nombre || ''} | ${globalCiudad} · ${globalPDV}`,
     sep,
-    `📊 *Total de reportes enviados: ${journeyLog.length}*`,
+    `📊 Total de reportes enviados: ${journeyLog.length}`,
     sep,
   ];
   journeyLog.forEach((item, idx) => {
-    full.push(`\n[${idx+1}] 🕐 ${item.time} — *${item.hoja}* | Código: ${item.code}`);
+    full.push(`\n[${idx+1}] 🕐 ${item.time} — ${item.hoja} | Código: ${item.code}`);
     full.push(item.waText);
     full.push('──────────────────────────────');
   });
@@ -1654,7 +1818,7 @@ function copyFullJourney() {
 }
 
 // ─── ENVÍO GENÉRICO ───────────────────────────────
-async function sendData(hojaName, extraFields, photoFields, btnId, btnLabel, waFields, waExtras) {
+async function sendData(hojaName, getFields, photoInputs, btnId, btnLabel) {
   const code = genValidationCode();
   const fp   = genFingerprint();
   const loc  = userLoc ? `${userLoc.lat.toFixed(6)},${userLoc.lng.toFixed(6)}` : '';
@@ -1677,75 +1841,77 @@ async function sendData(hojaName, extraFields, photoFields, btnId, btnLabel, waF
   fd.append('exact_lat',          userLoc?.lat ?? '');
   fd.append('exact_lng',          userLoc?.lng ?? '');
 
+  // Agregar campos específicos
+  const extraFields = getFields();
   Object.entries(extraFields).forEach(([k, v]) => fd.append(k, v));
-  photoFields.forEach(([inputId, fieldName]) => {
-    fd.append(fieldName, photoData[inputId] || '');
-  });
+  
+  // Agregar fotos
+  const photoUrls = {};
+  for (const [inputId, fieldName] of photoInputs) {
+    const b64 = photoData[inputId];
+    if (b64) {
+      fd.append(fieldName, b64);
+    }
+  }
 
   setBtnLoading(btnId, true, btnLabel);
+  let response;
   try {
-    await fetch(APPS_SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
-  } catch(_) {}
-
+    const resp = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: fd });
+    response = await resp.json();
+  } catch(e) {
+    console.error(e);
+  }
   setBtnLoading(btnId, false, btnLabel);
-  photoFields.forEach(([inputId]) => delete photoData[inputId]);
-
-  // Build WhatsApp text
-  const waText = buildWaText(hojaName, code, waFields, waExtras);
-
-  // Add photo links to wa text if we had photos (they'll be in Drive - we include a note)
-  // Since no-cors doesn't give us the URL back, we note photo was sent
-  let finalWaText = waText;
-  if (photoFields.length > 0 && photoFields.some(([id]) => !photoData[id] && document.getElementById('prev-' + id.replace('foto-',''))?.src)) {
-    // Photo was sent, note it
-    finalWaText = waText.replace('🗺️ *GPS', `📸 *Foto:* Enviada y guardada en Drive\n${sep2}🗺️ *GPS`).replace('${sep2}','');
-  }
-  // simpler: append photo note if any photo was present
-  const hadPhotos = photoFields.some(([inputId]) => {
-    const prevId = 'prev-' + inputId.replace('foto-','');
-    const prev = document.getElementById(prevId);
-    return prev && prev.src && prev.src.startsWith('data:');
-  });
-  if (hadPhotos || photoFields.length > 0) {
-    const photoNote = photoFields.length > 0 ? '\n📸 *Foto(s):* Guardada(s) en Google Drive' : '';
-    finalWaText = finalWaText + photoNote;
+  
+  // Limpiar fotos
+  for (const [inputId] of photoInputs) {
+    delete photoData[inputId];
+    const previewId = 'prev-' + inputId.replace('foto-', '');
+    const statusId = 'stat-' + inputId.replace('foto-', '');
+    clearPhotoUI(inputId, previewId, statusId);
   }
 
-  addToJourney(hojaName, code, finalWaText);
-  showSuccessModal(hojaName, code, finalWaText);
+  // Obtener URLs de fotos de la respuesta
+  const urls = {
+    foto1: response?.foto1 || '',
+    foto2: response?.foto2 || ''
+  };
+
+  // Construir texto de WhatsApp
+  const waText = buildWaText(hojaName, code, urls);
+  
+  addToJourney(hojaName, code, waText);
+  showSuccessModal(hojaName, code, waText);
 }
 
 // ─── SUBMIT: INGRESO ──────────────────────────────
 async function submitIngreso(e) {
   if (e) e.preventDefault();
-  const obs   = document.getElementById('i-obs').value;
-  const extra = { observacion: obs };
-  const waFields = { 'Observación': obs };
-  await sendData('Ingreso', extra, [['foto-ingreso','foto1_data']],
+  const obs = document.getElementById('i-obs').value;
+  await sendData('Ingreso', 
+    () => ({ observacion: obs }),
+    [['foto-ingreso','foto1_data']],
     'btn-ingreso',
-    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Enviar Reporte de Ingreso',
-    waFields, ['📸 Selfie de ingreso incluida']
+    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Enviar Reporte de Ingreso'
   );
   document.getElementById('i-obs').value = '';
-  clearPhotoUI('foto-ingreso','prev-ingreso','stat-ingreso');
 }
 
 // ─── SUBMIT: EXHIBICIONES ─────────────────────────
 async function submitExhibiciones(e) {
   if (e) e.preventDefault();
   const prod = document.getElementById('ex-producto').value;
-  const obs  = document.getElementById('ex-obs').value;
+  const obs = document.getElementById('ex-obs').value;
   if (!prod) { showToast('Selecciona un producto', 'error'); return; }
-  const extra = { producto: prod, observacion: obs };
-  const waFields = { 'Producto': prod, 'Observación': obs };
-  await sendData('Exhibiciones', extra, [['foto-exhibiciones','foto1_data']],
+  await sendData('Exhibiciones',
+    () => ({ producto: prod, observacion: obs }),
+    [['foto-exhibiciones','foto1_data']],
     'btn-exhibiciones',
-    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Enviar Exhibición',
-    waFields, ['📸 Foto de exhibición incluida']
+    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Enviar Exhibición'
   );
   document.getElementById('ex-obs').value = '';
   document.getElementById('ex-producto').selectedIndex = 0;
-  clearPhotoUI('foto-exhibiciones','prev-exhibiciones','stat-exhibiciones');
 }
 
 // ─── SUBMIT: GONDOLA ──────────────────────────────
@@ -1753,44 +1919,34 @@ async function submitGondola(e) {
   if (e) e.preventDefault();
   const prod = document.getElementById('gon-producto').value;
   if (!prod) { showToast('Selecciona un producto', 'error'); return; }
-  const cp  = document.getElementById('gon-caras-p').value || '0';
-  const cc  = document.getElementById('gon-caras-c').value || '0';
+  const cp = document.getElementById('gon-caras-p').value || '0';
+  const cc = document.getElementById('gon-caras-c').value || '0';
   const obs = document.getElementById('gon-obs').value;
-  const extra = { producto: prod, caras_propias: cp, caras_competencia: cc, observacion: obs };
-  const waFields = {
-    'Producto': prod,
-    'Caras Propias': cp,
-    'Caras Competencia': cc,
-    'Observación': obs
-  };
-  await sendData('EjecucionGondola', extra,
-    [['foto-gon-antes','foto1_data'],['foto-gon-despues','foto2_data']],
+  await sendData('EjecucionGondola',
+    () => ({ producto: prod, caras_propias: cp, caras_competencia: cc, observacion: obs }),
+    [['foto-gon-antes','foto1_data'], ['foto-gon-despues','foto2_data']],
     'btn-gondola',
-    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Enviar Ejecución Góndola',
-    waFields, ['📸 Fotos Antes/Después incluidas']
+    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Enviar Ejecución Góndola'
   );
   document.getElementById('gon-producto').selectedIndex = 0;
   document.getElementById('gon-caras-p').value = '0';
   document.getElementById('gon-caras-c').value = '0';
   document.getElementById('gon-obs').value = '';
-  clearPhotoUI('foto-gon-antes','prev-gon-antes','stat-gon-antes');
-  clearPhotoUI('foto-gon-despues','prev-gon-despues','stat-gon-despues');
 }
 
 // ─── SUBMIT: PRÓXIMOS A VENCER ────────────────────
 async function submitProxVencer(e) {
   if (e) e.preventDefault();
-  const prod  = document.getElementById('pv-producto').value;
+  const prod = document.getElementById('pv-producto').value;
   if (!prod) { showToast('Selecciona un producto', 'error'); return; }
   const fecha = document.getElementById('pv-fecha').value;
-  const cant  = document.getElementById('pv-cant').value || '0';
-  const obs   = document.getElementById('pv-obs').value;
-  const extra = { producto: prod, fecha_vencimiento: fecha, cantidad: cant, observacion: obs };
-  const waFields = { 'Producto': prod, 'Fecha Vencimiento': fecha, 'Cantidad': cant+' und.', 'Observación': obs };
-  await sendData('ProximosVencer', extra, [],
+  const cant = document.getElementById('pv-cant').value || '0';
+  const obs = document.getElementById('pv-obs').value;
+  await sendData('ProximosVencer',
+    () => ({ producto: prod, fecha_vencimiento: fecha, cantidad: cant, observacion: obs }),
+    [],
     'btn-proxvencer',
-    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Reportar Próximo a Vencer',
-    waFields, null
+    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Reportar Próximo a Vencer'
   );
   document.getElementById('pv-producto').selectedIndex = 0;
   document.getElementById('pv-fecha').value = '';
@@ -1803,27 +1959,16 @@ async function submitDescuentos(e) {
   if (e) e.preventDefault();
   if (dcItems.length === 0) { showToast('Agrega al menos un producto', 'error'); return; }
   const obs = document.getElementById('dc-obs').value;
-
-  // Build multi-product string for sheet
   const prodsStr = dcItems.map(it => `${it.prod} ($${it.reg}→$${it.desc}, ${it.pct}%)`).join(' | ');
-  const extra = {
-    productos_json: JSON.stringify(dcItems),
-    productos_str:  prodsStr,
-    observacion:    obs
-  };
-
-  const waExtras = ['  *Productos con descuento:*'].concat(
-    dcItems.map(it => `    🏷️ ${it.prod}\n      Regular: $${it.reg} → Desc: $${it.desc} (${it.pct}% off)`)
-  );
-  if (obs) waExtras.push(`  *Observación:* ${obs}`);
-
-  await sendData('Descuentos', extra, [],
+  await sendData('Descuentos',
+    () => ({ productos_json: JSON.stringify(dcItems), productos_str: prodsStr, observacion: obs }),
+    [],
     'btn-descuentos',
-    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Reportar Descuentos',
-    {}, waExtras
+    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Reportar Descuentos'
   );
   dcItems = [];
   renderDcItems();
+  updateDcResumen();
   document.getElementById('dc-obs').value = '';
 }
 
@@ -1832,22 +1977,15 @@ async function submitAgotados(e) {
   if (e) e.preventDefault();
   if (agItems.length === 0) { showToast('Agrega al menos un producto agotado', 'error'); return; }
   const obs = document.getElementById('ag-obs').value;
-  const extra = {
-    productos_json: JSON.stringify(agItems),
-    productos_str:  agItems.join(' | '),
-    observacion:    obs
-  };
-  const waExtras = ['  *Productos Agotados:*']
-    .concat(agItems.map(p => `    ❌ ${p}`));
-  if (obs) waExtras.push(`  *Causa / Observación:* ${obs}`);
-
-  await sendData('Agotados', extra, [],
+  await sendData('Agotados',
+    () => ({ productos_json: JSON.stringify(agItems), productos_str: agItems.join(' | '), observacion: obs }),
+    [],
     'btn-agotados',
-    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Reportar Agotados',
-    {}, waExtras
+    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Reportar Agotados'
   );
   agItems = [];
   renderAgItems();
+  updateAgResumen();
   document.getElementById('ag-obs').value = '';
 }
 
@@ -1857,23 +1995,20 @@ async function submitVentas(e) {
   if (vtItems.length === 0) { showToast('Agrega al menos un producto vendido', 'error'); return; }
   const obs = document.getElementById('vt-obs').value;
   const total = vtItems.reduce((s, it) => s + it.cant, 0);
-  const extra = {
-    productos_json: JSON.stringify(vtItems),
-    productos_str:  vtItems.map(it => `${it.prod} x${it.cant}`).join(' | '),
-    cantidad_total: total.toString(),
-    observacion:    obs
-  };
-  const waExtras = [`  *Productos vendidos (Total: ${total} und):*`]
-    .concat(vtItems.map(it => `    💰 ${it.prod} — ${it.cant} und.`));
-  if (obs) waExtras.push(`  *Observación:* ${obs}`);
-
-  await sendData('Ventas', extra, [],
+  await sendData('Ventas',
+    () => ({ 
+      productos_json: JSON.stringify(vtItems), 
+      productos_str: vtItems.map(it => `${it.prod} x${it.cant}`).join(' | '), 
+      cantidad_total: total.toString(),
+      observacion: obs 
+    }),
+    [],
     'btn-ventas',
-    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Registrar Ventas',
-    {}, waExtras
+    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Registrar Ventas'
   );
   vtItems = [];
   renderVtItems();
+  updateVtResumen();
   document.getElementById('vt-obs').value = '';
 }
 
@@ -1882,29 +2017,23 @@ async function submitCompetencia(e) {
   if (e) e.preventDefault();
   if (compItems.length === 0) { showToast('Agrega al menos un hallazgo', 'error'); return; }
   const obs = document.getElementById('comp-obs').value;
-  const extra = {
-    hallazgos_json: JSON.stringify(compItems),
-    hallazgos_str:  compItems.map(it => `${it.marca}: ${it.accion} (${it.prods})`).join(' | '),
-    observacion:    obs
-  };
-  const waExtras = ['  *Hallazgos de Competencia:*']
-    .concat(compItems.map(it =>
-      `    🏢 *${it.marca}* — ${it.accion}\n      Productos: ${it.prods}`
-    ));
-  if (obs) waExtras.push(`  *Observación General:* ${obs}`);
-
-  await sendData('Competencia', extra, [['foto-competencia','foto1_data']],
+  await sendData('Competencia',
+    () => ({ 
+      hallazgos_json: JSON.stringify(compItems), 
+      hallazgos_str: compItems.map(it => `${it.marca}: ${it.accion} (${it.prods})`).join(' | '), 
+      observacion: obs 
+    }),
+    [['foto-competencia','foto1_data']],
     'btn-competencia',
-    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Reportar Competencia',
-    {}, waExtras
+    '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-send"/></svg> Reportar Competencia'
   );
   compItems = [];
   compProdsTemp = [];
   renderCompItems();
   renderCompTags();
+  updateCompResumen();
   document.getElementById('comp-obs').value = '';
   document.getElementById('comp-marca').value = '';
-  clearPhotoUI('foto-competencia','prev-competencia','stat-competencia');
 }
 
 // ─── RESET / CLEAR ────────────────────────────────
@@ -1931,10 +2060,10 @@ function resetTab(tab) {
   form.querySelectorAll('.foto-status').forEach(el => el.textContent = '');
   form.querySelectorAll('input[type=file]').forEach(el => { delete photoData[el.id]; el.value = ''; });
   // Reset multi-items
-  if (tab === 'descuentos') { dcItems = []; renderDcItems(); }
-  if (tab === 'agotados')   { agItems = []; renderAgItems(); }
-  if (tab === 'ventas')     { vtItems = []; renderVtItems(); }
-  if (tab === 'competencia') { compItems = []; compProdsTemp = []; renderCompItems(); renderCompTags(); }
+  if (tab === 'descuentos') { dcItems = []; renderDcItems(); updateDcResumen(); }
+  if (tab === 'agotados')   { agItems = []; renderAgItems(); updateAgResumen(); }
+  if (tab === 'ventas')     { vtItems = []; renderVtItems(); updateVtResumen(); }
+  if (tab === 'competencia') { compItems = []; compProdsTemp = []; renderCompItems(); renderCompTags(); updateCompResumen(); }
 }
 </script>
 </body>
