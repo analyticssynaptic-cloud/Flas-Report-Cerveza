@@ -28,39 +28,6 @@
     }
     .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
     .header p { font-size: 14px; color: var(--text2); }
-    .config-section {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 24px;
-      display: none;
-    }
-    .config-section strong { color: #ef4444; display: block; margin-bottom: 8px; }
-    .config-input {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      color: var(--text1);
-      padding: 10px 12px;
-      border-radius: 4px;
-      font-size: 12px;
-      width: 100%;
-      margin: 8px 0;
-      font-family: 'Courier New', monospace;
-    }
-    .config-input::placeholder { color: var(--text3); }
-    .btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 600;
-      margin-top: 8px;
-    }
-    .btn:hover { background: #2563eb; }
     .status-badge {
       display: inline-block;
       padding: 8px 16px;
@@ -142,6 +109,12 @@
     .time { font-family: 'Courier New', monospace; font-size: 11px; color: var(--text2); margin-left: 12px; }
     .footer { text-align: center; padding: 24px; color: var(--text3); font-size: 12px; border-top: 1px solid var(--border); margin-top: 40px; }
     .loading { text-align: center; padding: 40px; color: var(--text2); }
+    .refresh-info { 
+      font-size: 11px; 
+      color: var(--text3); 
+      margin-top: 12px;
+      text-align: right;
+    }
     @media (max-width: 768px) {
       .container { padding: 16px; }
       .header { padding: 24px 16px; }
@@ -160,20 +133,9 @@
         <span class="pulse" id="statusPulse"></span>
         <span id="statusText">Cargando...</span>
       </div>
-    </div>
-
-    <div class="config-section" id="configSection">
-      <strong>⚠️ Falta configuración</strong>
-      <p style="font-size: 12px; margin-bottom: 12px;">
-        Pega la URL de tu Google Apps Script:
-      </p>
-      <input
-        type="text"
-        id="gasUrl"
-        class="config-input"
-        placeholder="https://script.google.com/macros/d/[DEPLOYMENT_ID]/userweb"
-      />
-      <button class="btn" onclick="saveGasUrl()">Guardar URL</button>
+      <div class="refresh-info">
+        Próxima actualización: <span id="nextRefresh">—</span>
+      </div>
     </div>
 
     <div class="metrics">
@@ -204,7 +166,7 @@
     </div>
 
     <div class="section">
-      <div class="section-title">Gráfico Respuesta</div>
+      <div class="section-title">Gráfico Respuesta (últimas 8h)</div>
       <div class="chart-container">
         <canvas id="responseChart"></canvas>
       </div>
@@ -216,46 +178,40 @@
     </div>
 
     <div class="footer">
-      <p>Auto-actualización cada 5 minutos • Última: <span id="lastUpdated">—</span></p>
+      <p>Actualización automática cada 5 minutos • Última: <span id="lastUpdated">—</span></p>
     </div>
   </div>
 
   <script>
+    // ============================================================================
+    // CONFIGURACIÓN
+    // ============================================================================
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbwZtbx_4jIVEnvgwJVaDFW0nO8s4NQHx5gSpI6EiSGQ9wH0giPXXjXduv8XEwE7Ap7w2Q/exec';
+    const REFRESH_INTERVAL = 300000; // 5 minutos en milisegundos
     let chart = null;
-    const CONFIG_KEY = 'networkMonitor_gasUrl';
+    let nextRefreshTime = null;
+    let countdownInterval = null;
 
-    // ========== INIT ==========
+    // ============================================================================
+    // INIT
+    // ============================================================================
     window.addEventListener('DOMContentLoaded', function() {
-      const savedUrl = localStorage.getItem(CONFIG_KEY);
+      loadData();
       
-      if (!savedUrl) {
-        document.getElementById('configSection').style.display = 'block';
-      } else {
-        document.getElementById('gasUrl').value = savedUrl;
-        startMonitoring(savedUrl);
-      }
+      // Actualizar cada 5 minutos
+      setInterval(loadData, REFRESH_INTERVAL);
+      
+      // Actualizar countdown cada segundo
+      countdownInterval = setInterval(updateCountdown, 1000);
+      updateCountdown();
     });
 
-    function saveGasUrl() {
-      const url = document.getElementById('gasUrl').value.trim();
-      if (!url || !url.includes('script.google.com')) {
-        alert('URL inválida');
-        return;
-      }
-      localStorage.setItem(CONFIG_KEY, url);
-      document.getElementById('configSection').style.display = 'none';
-      startMonitoring(url);
-    }
-
-    function startMonitoring(gasUrl) {
-      loadData(gasUrl);
-      setInterval(() => loadData(gasUrl), 300000);
-    }
-
-    // ========== DATA LOADING ==========
-    async function loadData(gasUrl) {
+    // ============================================================================
+    // LOAD DATA
+    // ============================================================================
+    async function loadData() {
       try {
-        const response = await fetch(gasUrl + '?t=' + Date.now());
+        const response = await fetch(GAS_URL + '?t=' + Date.now());
         const data = await response.json();
 
         if (data.error) {
@@ -264,7 +220,7 @@
         }
 
         if (!data.records || data.records.length === 0) {
-          document.getElementById('currentStatus').textContent = 'Sin datos';
+          document.getElementById('currentStatus').textContent = 'Recolectando datos...';
           return;
         }
 
@@ -273,12 +229,18 @@
         updateList(data.records);
         updateChart(data.records);
         document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString('es-CO');
+        
+        // Reset contador
+        nextRefreshTime = Date.now() + REFRESH_INTERVAL;
 
       } catch (error) {
         console.error('Error cargando datos:', error);
       }
     }
 
+    // ============================================================================
+    // UPDATE METRICS
+    // ============================================================================
     function updateMetrics(m) {
       document.getElementById('currentStatus').textContent = m.lastStatus;
       document.getElementById('uptimePercent').textContent = m.uptime + '%';
@@ -292,6 +254,9 @@
       document.getElementById('statusText').textContent = isOnline ? 'En Línea' : 'Offline';
     }
 
+    // ============================================================================
+    // UPDATE TIMELINE
+    // ============================================================================
     function updateTimeline(records) {
       const tl = document.getElementById('timeline');
       tl.innerHTML = '';
@@ -299,28 +264,50 @@
       records.slice(-288).forEach(r => {
         const bar = document.createElement('div');
         bar.className = 'timeline-bar ' + (r.success ? 'success' : 'failure');
-        bar.innerHTML = '<div class="timeline-tooltip">' + (r.success ? '✓' : '✕') + ' ' + r.responseTime + 'ms</div>';
+        bar.innerHTML = '<div class="timeline-tooltip">' + (r.success ? '✓' : '✕') + ' ' + r.responseTime + 'ms • ' + r.timestamp + '</div>';
         tl.appendChild(bar);
       });
     }
 
+    // ============================================================================
+    // UPDATE LIST
+    // ============================================================================
     function updateList(records) {
       const list = document.getElementById('statusList');
       list.innerHTML = '';
+      
+      if (records.length === 0) {
+        list.innerHTML = '<div style="text-align: center; color: var(--text3);">Sin historial</div>';
+        return;
+      }
       
       records.slice(-20).reverse().forEach(r => {
         const item = document.createElement('div');
         item.className = 'item ' + (r.success ? 'success' : 'failure');
         const status = r.success ? '✓ ' + r.responseTime + 'ms' : '✕ Error';
-        item.innerHTML = '<span>' + status + '</span><span class="time">' + new Date(r.timestamp).toLocaleTimeString('es-CO') + '</span>';
+        const time = new Date(r.timestamp).toLocaleTimeString('es-CO');
+        item.innerHTML = '<span>' + status + '</span><span class="time">' + time + '</span>';
         list.appendChild(item);
       });
     }
 
+    // ============================================================================
+    // UPDATE CHART
+    // ============================================================================
     function updateChart(records) {
       const ctx = document.getElementById('responseChart').getContext('2d');
+      if (!ctx) return;
+      
+      if (records.length === 0) {
+        ctx.canvas.parentElement.innerHTML = '<div class="loading">Recolectando datos...</div>';
+        return;
+      }
+
       const rec = records.slice(-96);
-      const labels = rec.map(r => new Date(r.timestamp).toLocaleTimeString('es-CO', {hour: '2-digit', minute: '2-digit'}));
+      const labels = rec.map(r => {
+        const date = new Date(r.timestamp);
+        return date.toLocaleTimeString('es-CO', {hour: '2-digit', minute: '2-digit'});
+      });
       const data = rec.map(r => r.responseTime);
 
       if (chart) chart.destroy();
@@ -347,11 +334,35 @@
             legend: { labels: { color: '#b0b0b0' } }
           },
           scales: {
-            y: { beginAtZero: true, ticks: { color: '#808080' }, grid: { color: 'rgba(51, 51, 51, 0.5)' } },
-            x: { ticks: { color: '#808080' }, grid: { color: 'rgba(51, 51, 51, 0.5)' } }
+            y: { 
+              beginAtZero: true, 
+              ticks: { color: '#808080' }, 
+              grid: { color: 'rgba(51, 51, 51, 0.5)' } 
+            },
+            x: { 
+              ticks: { color: '#808080' }, 
+              grid: { color: 'rgba(51, 51, 51, 0.5)' } 
+            }
           }
         }
       });
+    }
+
+    // ============================================================================
+    // COUNTDOWN TIMER
+    // ============================================================================
+    function updateCountdown() {
+      if (!nextRefreshTime) {
+        nextRefreshTime = Date.now() + REFRESH_INTERVAL;
+      }
+      
+      const now = Date.now();
+      const remaining = Math.max(0, nextRefreshTime - now);
+      const seconds = Math.floor((remaining / 1000) % 60);
+      const minutes = Math.floor((remaining / 1000 / 60) % 60);
+      
+      const timeString = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+      document.getElementById('nextRefresh').textContent = timeString;
     }
   </script>
 </body>
